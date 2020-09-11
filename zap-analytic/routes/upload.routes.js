@@ -141,7 +141,41 @@ function filterGeneric (Menssagens, nome ){
     return menssagens;
 }
 
+function AgruparContextos(Menssagens){
+    var antes = {};
+    var idContexto;
+    var contextos = [];
 
+   
+        for(var i=0; i< Menssagens.length-1; i++)
+        {
+
+            if(Menssagens[i].nome !== antes.nome )
+            {
+                antes = {
+                    nome: Menssagens[i].nome,
+                    id: i
+                }
+
+                var msgs = [];
+                msgs.push(Menssagens[i]);
+                var contexto = {
+                    msgs:msgs,
+                    nome: Menssagens[i].nome
+                }
+                
+                idContexto = contextos.push(contexto)-1;
+        
+            }
+            else{
+
+                contextos[idContexto].msgs.push(Menssagens[i]);
+            }
+        }
+
+        return contextos;
+      
+}
 
 var Menssagens= [];
 var sujeiras= [];
@@ -216,6 +250,9 @@ module.exports = app => {
                 var horas = Math.round((duration.asDays() - Math.round(duration.asDays()))*24);
                 var minutos = Math.round(((duration.asDays() - Math.round(duration.asDays()))*24 - Math.round((duration.asDays() - Math.round(duration.asDays()))*24)) * 60);
                 
+                var contextos = AgruparContextos(Menssagens);
+
+                console.log(contextos);
 
                 res.render('home', {totalmsg:Menssagens.length, 
                                     dtinicio: Menssagens[0].data.toLocaleDateString( 'pt-br', options),
