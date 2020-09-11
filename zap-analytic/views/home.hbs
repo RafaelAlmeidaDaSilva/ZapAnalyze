@@ -2,7 +2,7 @@
     <h1>Análise de whatsapp</h1>
     <br>
 
-    <h3>Informações gerais</h3>
+    <h2>Informações gerais</h2>
     <p> <b>Começo </b>:   {{dtinicio}} </p>
     <p> <b>Fim </b>:   {{dtfim}}</p>
     <p> {{dias}} dias, {{horasDias}} horas e {{minutosHoras}} minutos de conversas.</p>
@@ -10,10 +10,16 @@
     <p> <b>Total de mensagens </b>: {{totalmsg}}</p>
     <br>
 
-    <h3>Informações individuais</h3>
+    <h2>Informações individuais</h2>
     {{#each msgsRemetentes as |item| }}
         <p><b>{{item.nome}}</b> : {{item.mgsrt.length}}</p>
     {{/each}}
+    <h3> Media de mensagens sem respostas </h3>
+    {{#each dados as |line| }}
+        <p><b>{{line.nome}}</b> : {{line.mediaContexto}}</p>
+    {{/each}}
+
+
 
     
     {{!-- <input type = "hidden" id = "remetentes" value = {{remetentes}} /> --}}

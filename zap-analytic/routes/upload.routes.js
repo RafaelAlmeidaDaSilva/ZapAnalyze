@@ -177,6 +177,23 @@ function AgruparContextos(Menssagens){
       
 }
 
+
+function MediaContexto (AgrupamentoContexto, remetente){
+    var ContextosRemetente =  filterGeneric(AgrupamentoContexto, remetente);
+    var N=0 , E=0;
+
+    for(var i =0; i < ContextosRemetente.length-1; i++ )
+    {
+        E+= ContextosRemetente[i].msgs.length;
+        N++;
+    }
+
+  
+    return E/N;
+  }
+  
+
+
 var Menssagens= [];
 var sujeiras= [];
 
@@ -224,8 +241,8 @@ module.exports = app => {
                     timeStyle: ('full' || 'long' || 'medium' || 'short' ), 
                 }
            
-                console.log("Inicio: ",Menssagens[0].data);
-                console.log("Fim: ", Menssagens[Menssagens.length-1].data); 
+                // console.log("Inicio: ",Menssagens[0].data);
+                // console.log("Fim: ", Menssagens[Menssagens.length-1].data); 
                 var fim = moment(Menssagens[Menssagens.length-1].data);
                 var inicio = moment(Menssagens[0].data)
                 var duration =  moment.duration(fim.diff(inicio));
@@ -235,14 +252,28 @@ module.exports = app => {
                  
                 MensagensAgrupadasDias = contarDiasConversados(duration.asDays(), inicio.toDate());
                 var msgsRemententes = [];
-               
+                var media;
+                var contextos = AgruparContextos(Menssagens);
+                var dados=[];
+
                 identificarRemetentes(Menssagens).forEach(element => {
-                   var msgsRt={
+                    media = MediaContexto(contextos, element.nome);
+                    
+                    var msgsRt={
                        nome: element.nome,
                        mgsrt: filterGeneric(Menssagens,element.nome)
                    };
-               
+                   
                    msgsRemententes.push(msgsRt); 
+                   dado = {
+                        nome: element.nome,
+                        mediaContexto: media,
+                        msgsContexto: filterGeneric(contextos, element.nome)                      
+
+                   }
+
+                   dados.push(dado);
+
                 });
           
                 
@@ -250,9 +281,10 @@ module.exports = app => {
                 var horas = Math.round((duration.asDays() - Math.round(duration.asDays()))*24);
                 var minutos = Math.round(((duration.asDays() - Math.round(duration.asDays()))*24 - Math.round((duration.asDays() - Math.round(duration.asDays()))*24)) * 60);
                 
-                var contextos = AgruparContextos(Menssagens);
+              
 
-                console.log(contextos);
+               
+                
 
                 res.render('home', {totalmsg:Menssagens.length, 
                                     dtinicio: Menssagens[0].data.toLocaleDateString( 'pt-br', options),
@@ -261,7 +293,9 @@ module.exports = app => {
                                     dias: dias,
                                     horasDias: horas ,
                                     minutosHoras: minutos,
-                                    convDias: contarDC
+                                    convDias: contarDC,
+                                    dados: dados
+                                    
                                 });
             });
         //   
