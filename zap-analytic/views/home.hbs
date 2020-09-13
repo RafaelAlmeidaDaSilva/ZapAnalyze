@@ -6,7 +6,7 @@
     <p> <b>Começo </b>:   {{dtinicio}} </p>
     <p> <b>Fim </b>:   {{dtfim}}</p>
     <p> {{dias}} dias, {{horasDias}} horas e {{minutosHoras}} minutos de conversas.</p>
-    <p> <b>Quantidade de dias conversados</b> :{{convDias}} </p>
+    <p> <b>Quantidade de dias com alguma mensagem</b> :{{convDias}} </p>
     <p> <b>Total de mensagens </b>: {{totalmsg}}</p>
     <br>
 
@@ -14,41 +14,13 @@
     {{#each msgsRemetentes as |item| }}
         <p><b>{{item.nome}}</b> : {{item.mgsrt.length}}</p>
     {{/each}}
-    <h3> Media de mensagens sem respostas </h3>
+    
     {{#each dados as |line| }}
-        <p><b>{{line.nome}}</b> : {{line.mediaContexto}}</p>
+        <p><b>{{line.nome}}</b> : {{line.mediaPalavras}} media de palavras por mensagens {{line.mediaContexto}}  mensagens por contexto</p>
     {{/each}}
 
 
-
-    
-    {{!-- <input type = "hidden" id = "remetentes" value = {{remetentes}} /> --}}
-    <canvas id="bar-chart" width="800" height="450"></canvas>
-
    
-    {{!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
-    <script>
-        var myChart = new Chart(document.getElementById("bar-chart"), {
-                    type: 'bar',
-                    data: {
-                    labels: document.getElementById("remetentes").value,
-                    datasets: [
-                        {
-                        label: "Population (millions)",
-                        backgroundColor: ["#3e95cd", "#8e5ea2"],
-                        data: [2478,5267]
-                        }
-                    ]
-                    },
-                    options: {
-                    legend: { display: false },
-                    title: {
-                        display: true,
-                        text: 'Predicted world population (millions) in 2050'
-                    }
-                    }
-                });
-    </script> --}}
     
     
 

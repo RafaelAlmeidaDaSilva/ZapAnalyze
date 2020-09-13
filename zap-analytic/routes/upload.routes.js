@@ -47,6 +47,49 @@ function atribLine(arraySlipString){
     return mensagem;
     
 }
+
+function mensagensPorData(durationDias, dataInicio, hora, minuto){
+    var  MensagensAgrupadasDias =[];
+    var  contDiasConversados = 0;
+    let  dataAtual, dataFinal, d;
+
+    for(i=0; i < durationDias ; i++){
+        dataAtual = dataInicio;
+        d = moment(dataAtual);
+        d.add(i, 'day'); 
+        dataAtual = d.toDate();
+        dataAtual.setHours(0,0,0,0);
+        dataFinal = d.toDate();
+        dataFinal.setHours(hora,minuto,0,0);
+
+        let objetosFiltrados = Menssagens.filter(result => {
+            return result.data >= dataAtual  && result.data <= dataFinal;
+           });
+
+      var analytic = {
+            dtinicio: dataAtual,
+            dtfim: dataFinal,
+            msgs: objetosFiltrados 
+       }
+       
+       MensagensAgrupadasDias.push(analytic);   
+
+       if(objetosFiltrados.length !== 0)
+           contDiasConversados++;
+            
+            
+        objetosFiltrados=null;
+
+    }
+
+    // console.log("Dias conversados: ", contDiasConversados);
+    contarDC = contDiasConversados;
+    return MensagensAgrupadasDias;
+}
+
+
+
+
 var contarDC;
 function contarDiasConversados(durationDias, dataInicio ){
     var  MensagensAgrupadasDias =[];
@@ -129,6 +172,7 @@ function identificarRemetentes(Menssagens){
 
 function quebraDeLinha (arraySlipString){
     if(arraySlipString[0].substring(2,3) === '/')
+        if(arraySlipString[3].substring(arraySlipString[3].length-1, arraySlipString[3].length) === ':')
            return true 
    return false;        
 }
@@ -177,7 +221,6 @@ function AgruparContextos(Menssagens){
       
 }
 
-
 function MediaContexto (AgrupamentoContexto, remetente){
     var ContextosRemetente =  filterGeneric(AgrupamentoContexto, remetente);
     var N=0 , E=0;
@@ -191,7 +234,18 @@ function MediaContexto (AgrupamentoContexto, remetente){
   
     return E/N;
   }
-  
+
+function MediaPalavrasContexto(Mensagens, nome){
+    var Epalavras=0, N=0, media=0;
+    var mensagens = filterGeneric(Mensagens, nome);
+    for(var i = 0; i< mensagens.length-1 ; i++)
+    {
+        Epalavras += splitString(mensagens[i].texto, ' ').length;
+        N++;
+    }
+    media = Epalavras / N;
+    return media;
+}
 
 
 var Menssagens= [];
@@ -241,8 +295,6 @@ module.exports = app => {
                     timeStyle: ('full' || 'long' || 'medium' || 'short' ), 
                 }
            
-                // console.log("Inicio: ",Menssagens[0].data);
-                // console.log("Fim: ", Menssagens[Menssagens.length-1].data); 
                 var fim = moment(Menssagens[Menssagens.length-1].data);
                 var inicio = moment(Menssagens[0].data)
                 var duration =  moment.duration(fim.diff(inicio));
@@ -268,22 +320,19 @@ module.exports = app => {
                    dado = {
                         nome: element.nome,
                         mediaContexto: media,
+                        mediaPalavras: MediaPalavrasContexto(Menssagens, element.nome),
                         msgsContexto: filterGeneric(contextos, element.nome)                      
-
                    }
 
                    dados.push(dado);
-
+                   
                 });
-          
                 
-                var dias = Math.round(duration.asDays());
-                var horas = Math.round((duration.asDays() - Math.round(duration.asDays()))*24);
-                var minutos = Math.round(((duration.asDays() - Math.round(duration.asDays()))*24 - Math.round((duration.asDays() - Math.round(duration.asDays()))*24)) * 60);
                 
-              
-
-               
+                
+                var dias = Math.trunc(duration.asDays());
+                var horas = Math.trunc(((duration.asDays() - Math.trunc(duration.asDays()))*24));
+                var minutos = Math.trunc((((duration.asDays() - Math.trunc(duration.asDays()))*24) - Math.trunc((duration.asDays() - Math.trunc(duration.asDays()))*24)) * 60);
                 
 
                 res.render('home', {totalmsg:Menssagens.length, 
@@ -294,9 +343,7 @@ module.exports = app => {
                                     horasDias: horas ,
                                     minutosHoras: minutos,
                                     convDias: contarDC,
-                                    dados: dados
-                                    
-                                });
+                                    dados: dados });
             });
         //   
         
