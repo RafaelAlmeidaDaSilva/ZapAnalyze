@@ -45,45 +45,6 @@ function atribLine(line){
 }
 
 
-// function mensagensPorData(durationDias, dataInicio, hora, minuto){
-//     var  MensagensAgrupadasDias =[];
-//     var  contDiasConversados = 0;
-//     let  dataAtual, dataFinal, d;
-
-//     for(i=0; i < durationDias ; i++){
-//         dataAtual = dataInicio;
-//         d = moment(dataAtual);
-//         d.add(i, 'day'); 
-//         dataAtual = d.toDate();
-//         dataAtual.setHours(0,0,0,0);
-//         dataFinal = d.toDate();
-//         dataFinal.setHours(hora,minuto,0,0);
-
-//         let objetosFiltrados = Menssagens.filter(result => {
-//             return result.data >= dataAtual  && result.data <= dataFinal;
-//            });
-
-//       var analytic = {
-//             dtinicio: dataAtual,
-//             dtfim: dataFinal,
-//             msgs: objetosFiltrados 
-//        }
-       
-//        MensagensAgrupadasDias.push(analytic);   
-
-//        if(objetosFiltrados.length !== 0)
-//            contDiasConversados++;
-            
-            
-//         objetosFiltrados=null;
-
-//     }
-
-//     // console.log("Dias conversados: ", contDiasConversados);
-//     contarDC = contDiasConversados;
-//     return MensagensAgrupadasDias;
-// }
-
 function lineDivision(line){
     var contatoMensagem = line.substring(19,line.length)
     return contatoMensagem;
@@ -264,7 +225,7 @@ function MediaContexto (AgrupamentoContexto, remetente){
     return E/N;
 }
 
-function MediaPalavrasContexto(Mensagens, nome){
+function mediaPalavras(Mensagens, nome){
     var Epalavras=0, N=0, media=0;
     var mensagens = filterGeneric(Mensagens, nome);
     for(var i = 0; i< mensagens.length-1 ; i++)
@@ -276,6 +237,39 @@ function MediaPalavrasContexto(Mensagens, nome){
     return media;
 }
 
+function  mediaPalavrasContexto(contexto, nome){
+    var Epalavras=0, N=0, media=0;
+    var fi = [];
+    var mensagens = filterGeneric(contexto, nome);
+
+    for(var i = 0; i<= mensagens.length-1; i++)
+    {
+        Epalavras=0;
+        N=0;
+        media=0;
+        for(var j = 0; j<= contexto[i].msgs.length-1; j++)
+        {
+            Epalavras += contexto[i].msgs[j].texto.split(' ').length;
+            N++;
+        }
+        
+        media = Epalavras/N;
+        fi.push(media);
+    }
+
+    Epalavras=0;
+    N=0;
+    media=0;
+
+    for(var y= 0 ; y <= fi.length-1; y++)
+    {
+        Epalavras += fi[y];
+        N++;
+    }
+
+    media = Epalavras/N;
+    return media;
+}
 
 var Menssagens= [];
 var sujeiras= [];
@@ -344,8 +338,9 @@ module.exports = app => {
                    msgsRemententes.push(msgsRt); 
                    dado = {
                         nome: element.nome,
-                        mediaContexto: media,
-                        mediaPalavras: MediaPalavrasContexto(Menssagens, element.nome),
+                        mediaMsgContexto: media,
+                        mediaPalavras: mediaPalavras(Menssagens, element.nome),
+                        mediaPalavrasContexto: mediaPalavrasContexto(contextos, element.nome),
                         msgsContexto: filterGeneric(contextos, element.nome)                      
                    }
 
@@ -367,7 +362,7 @@ module.exports = app => {
                                     dtfim: Menssagens[Menssagens.length-1].data.toLocaleDateString( 'pt-br', options),
                                     msgsRemetentes: msgsRemententes,
                                     dias: dias,
-                                    horasDias: horas ,
+                                    horasDias: horas,
                                     minutosHoras: minutos,
                                     convDias: contarDC,
                                     dados: dados });

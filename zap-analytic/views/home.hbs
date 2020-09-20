@@ -15,8 +15,9 @@
         <p><b>{{item.nome}}</b> : {{item.mgsrt.length}}</p>
     {{/each}}
     
+    <h4> Analise de interatividade</h4>
     {{#each dados as |line| }}
-        <p><b>{{line.nome}}</b> : {{line.mediaPalavras}} media de palavras por mensagens {{line.mediaContexto}}  mensagens por contexto</p>
+        <p><b>{{line.nome}}</b> : {{line.mediaPalavras}} media de palavras por mensagens {{line.mediaPalavrasContexto}} media palavras contexto {{line.mediaMsgContexto}}  mensagens por contexto</p>
     {{/each}}
 
 
