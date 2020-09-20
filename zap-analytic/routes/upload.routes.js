@@ -332,20 +332,14 @@ module.exports = app => {
                     
                     var msgsRt={
                        nome: element.nome,
+                       mediaMsgContexto: media,
+                       mediaPalavras: mediaPalavras(Menssagens, element.nome),
+                       mediaPalavrasContexto: mediaPalavrasContexto(contextos, element.nome),
+                       msgsContexto: filterGeneric(contextos, element.nome),  
                        mgsrt: filterGeneric(Menssagens,element.nome)
                    };
                    
                    msgsRemententes.push(msgsRt); 
-                   dado = {
-                        nome: element.nome,
-                        mediaMsgContexto: media,
-                        mediaPalavras: mediaPalavras(Menssagens, element.nome),
-                        mediaPalavrasContexto: mediaPalavrasContexto(contextos, element.nome),
-                        msgsContexto: filterGeneric(contextos, element.nome)                      
-                   }
-
-                   dados.push(dado);
-                   
                 });
                 
                 // console.log("Ultima mensagem: ",Menssagens[Menssagens.length-1].data);
@@ -365,7 +359,7 @@ module.exports = app => {
                                     horasDias: horas,
                                     minutosHoras: minutos,
                                     convDias: contarDC,
-                                    dados: dados });
+                                    });
             });
         //   
         

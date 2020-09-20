@@ -11,18 +11,33 @@
     <br>
 
     <h2>Informações individuais</h2>
-    {{#each msgsRemetentes as |item| }}
-        <p><b>{{item.nome}}</b> : {{item.mgsrt.length}}</p>
-    {{/each}}
-    
-    <h4> Analise de interatividade</h4>
-    {{#each dados as |line| }}
-        <p><b>{{line.nome}}</b> : {{line.mediaPalavras}} media de palavras por mensagens {{line.mediaPalavrasContexto}} media palavras contexto {{line.mediaMsgContexto}}  mensagens por contexto</p>
-    {{/each}}
+    <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                    <th scope="col">Contato (RT)</th>
+                    <th scope="col">Quantidade M. (QM)</th>
+                    <th scope="col">Media P. (MP)</th>
+                    <th scope="col">Mensagens .M (MM)</th>
+                    <th scope="col">Media P. Contexto (MM)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                 {{#each msgsRemetentes as |item| }}
+                    <tr>
+                        <th scope="row">{{item.nome}}</th>
+                        <td>{{item.mgsrt.length}}</td>
+                        <td>{{item.mediaPalavras}}</td>
+                        <td>{{item.mediaMsgContexto}}</td>
+                        <td>{{item.mediaPalavrasContexto}}</td>
+                    </tr>
+                 {{/each}}
+           </tbody>
+   </table>
 
 
    
-    
+   
+
     
 
     
