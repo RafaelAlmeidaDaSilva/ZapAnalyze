@@ -12,82 +12,111 @@ function splitString(stringToSplit, separator) {
     return arrayOfStrings;
 }
 
-function atribLine(arraySlipString){
+function atribLine(line){
 
-    
+    var dataHora = line.substring(0, 16);
+    var arraySlipString = dataHora.split(' ');
+   
+    var ano, mes, dia, hora, min;
+    dia = arraySlipString[0].split('/')[0];
+    mes = parseInt(arraySlipString[0].split('/')[1])-1;
+    ano = arraySlipString[0].split('/')[2];
+    hora = arraySlipString[1].split(':')[0];
+    min = arraySlipString[1].split(':')[1];
 
+    var dtMenssagem = new Date(ano,mes.toString(),dia,hora,min);
 
-    // pegar a data da mensagem
-    var dtMenssagem = new Date(splitString(arraySlipString[0], '/')[2],
-                                splitString(arraySlipString[0], '/')[1],
-                                splitString(arraySlipString[0], '/')[0],
-                                splitString(arraySlipString[1], ':')[0],
-                                splitString(arraySlipString[1], ':')[1]
-                                );
-    
-    // pega o nome do remetente
-
-    var rtMenssagem = splitString( arraySlipString[3], ':' )[0];
-    var txtMenssagem = [];
-    for (var i = 4; i < arraySlipString.length; i++) {
-        if(arraySlipString[i] !== '' || arraySlipString[i] !== null)
-            txtMenssagem.push(arraySlipString[i]);
-        else
-            break;   
+     var remetenteMsg = lineDivision(line);
+     var position = FirstCharPosition(remetenteMsg, ':');
+     
+     var rtMenssagem = remetenteMsg.substring(0,position);
+ 
+     var txt = remetenteMsg.substring(position+2, remetenteMsg.length)
+ 
+     var mensagem = 
+     {
+         data: dtMenssagem,
+         nome: rtMenssagem,
+         texto: txt
      }
-
-    var txt = txtMenssagem.join(' ');
-
-    var mensagem = {
-        data: dtMenssagem,
-        nome: rtMenssagem,
-        texto: txt
-    }
-
-    return mensagem;
+ 
+     return mensagem;
     
 }
 
-function mensagensPorData(durationDias, dataInicio, hora, minuto){
-    var  MensagensAgrupadasDias =[];
-    var  contDiasConversados = 0;
-    let  dataAtual, dataFinal, d;
 
-    for(i=0; i < durationDias ; i++){
-        dataAtual = dataInicio;
-        d = moment(dataAtual);
-        d.add(i, 'day'); 
-        dataAtual = d.toDate();
-        dataAtual.setHours(0,0,0,0);
-        dataFinal = d.toDate();
-        dataFinal.setHours(hora,minuto,0,0);
+// function mensagensPorData(durationDias, dataInicio, hora, minuto){
+//     var  MensagensAgrupadasDias =[];
+//     var  contDiasConversados = 0;
+//     let  dataAtual, dataFinal, d;
 
-        let objetosFiltrados = Menssagens.filter(result => {
-            return result.data >= dataAtual  && result.data <= dataFinal;
-           });
+//     for(i=0; i < durationDias ; i++){
+//         dataAtual = dataInicio;
+//         d = moment(dataAtual);
+//         d.add(i, 'day'); 
+//         dataAtual = d.toDate();
+//         dataAtual.setHours(0,0,0,0);
+//         dataFinal = d.toDate();
+//         dataFinal.setHours(hora,minuto,0,0);
 
-      var analytic = {
-            dtinicio: dataAtual,
-            dtfim: dataFinal,
-            msgs: objetosFiltrados 
-       }
+//         let objetosFiltrados = Menssagens.filter(result => {
+//             return result.data >= dataAtual  && result.data <= dataFinal;
+//            });
+
+//       var analytic = {
+//             dtinicio: dataAtual,
+//             dtfim: dataFinal,
+//             msgs: objetosFiltrados 
+//        }
        
-       MensagensAgrupadasDias.push(analytic);   
+//        MensagensAgrupadasDias.push(analytic);   
 
-       if(objetosFiltrados.length !== 0)
-           contDiasConversados++;
+//        if(objetosFiltrados.length !== 0)
+//            contDiasConversados++;
             
             
-        objetosFiltrados=null;
+//         objetosFiltrados=null;
 
+//     }
+
+//     // console.log("Dias conversados: ", contDiasConversados);
+//     contarDC = contDiasConversados;
+//     return MensagensAgrupadasDias;
+// }
+
+function lineDivision(line){
+    var contatoMensagem = line.substring(19,line.length)
+    return contatoMensagem;
+}
+
+function FirstCharPosition(line, char){
+    for(var i = 0; i < line.length-1 ; i++)
+    {
+        if(line.substring(i, i+1) == char)
+         return i;
     }
-
-    // console.log("Dias conversados: ", contDiasConversados);
-    contarDC = contDiasConversados;
-    return MensagensAgrupadasDias;
+    return null;
 }
 
 
+
+
+function lineBreak(line){
+    var remetenteMsg = lineDivision(line);
+
+    if(line.substring(0, 19).split(' ')[0].substring(2,3) === '/')
+    {
+        if(remetenteMsg !== null) // quer dizer que e um quebra de linha
+        {
+            var position = FirstCharPosition(remetenteMsg, ':');
+            if (position !== null)
+                return true;
+            
+        }
+    }
+    return false;
+
+}
 
 
 var contarDC;
@@ -141,7 +170,7 @@ function identificarRemetentes(Menssagens){
     var remetentes = []
 
     // percorrer por toda lista de menssagem 
-    for(i = 0 ; i < Menssagens.length-1 ; i++){
+    for(i = 0 ; i <= Menssagens.length-1 ; i++){
        if (remetentes.length !== 0){
             
             if(!exist(remetentes, Menssagens[i].nome))
@@ -170,12 +199,12 @@ function identificarRemetentes(Menssagens){
     return remetentes;
 }
 
-function quebraDeLinha (arraySlipString){
-    if(arraySlipString[0].substring(2,3) === '/')
-        if(arraySlipString[3].substring(arraySlipString[3].length-1, arraySlipString[3].length) === ':')
-           return true 
-   return false;        
-}
+// function quebraDeLinha (arraySlipString){
+//     if(arraySlipString[0].substring(2,3) === '/')
+//         if(arraySlipString[3].substring(arraySlipString[3].length-1, arraySlipString[3].length) === ':')
+//            return true 
+//    return false;        
+// }
 
 function filterGeneric (Menssagens, nome ){
     let menssagens = Menssagens.filter((line) => {
@@ -233,7 +262,7 @@ function MediaContexto (AgrupamentoContexto, remetente){
 
   
     return E/N;
-  }
+}
 
 function MediaPalavrasContexto(Mensagens, nome){
     var Epalavras=0, N=0, media=0;
@@ -264,12 +293,8 @@ module.exports = app => {
             });
             
             rl.on('line', (line) => {
-                 // analisar
-
-                // objetivo: Calcular o nivel de interesse 
-
-                // esse codigo repara sujeira e quebra de linhas provadas por imagens com legenda
-                if(!quebraDeLinha(splitString(line, ' ')))
+                
+                if(!lineBreak(line))
                 {
                     if(Menssagens.length !== 0){
                         var space = ' ';
@@ -284,8 +309,9 @@ module.exports = app => {
                         // deleta a linha 
                     }
                 }else{
-                    Menssagens.push(atribLine(splitString(line, ' ')));
-                }    
+                    // Menssagens.push(atribLine(splitString(line, ' ')));
+                    Menssagens.push(atribLine(line));
+                }     
             });
             rl.on('close', () => {
                 
@@ -298,7 +324,6 @@ module.exports = app => {
                 var fim = moment(Menssagens[Menssagens.length-1].data);
                 var inicio = moment(Menssagens[0].data)
                 var duration =  moment.duration(fim.diff(inicio));
-                
                 
                 var  MensagensAgrupadasDias =[];
                  
@@ -328,13 +353,15 @@ module.exports = app => {
                    
                 });
                 
+                // console.log("Ultima mensagem: ",Menssagens[Menssagens.length-1].data);
+                // console.log("Mensagem:", Menssagens[Menssagens.length-1]);
                 
-                
+                // console.log("Primeira mensagem",Menssagens[0].data);
+
                 var dias = Math.trunc(duration.asDays());
                 var horas = Math.trunc(((duration.asDays() - Math.trunc(duration.asDays()))*24));
                 var minutos = Math.trunc((((duration.asDays() - Math.trunc(duration.asDays()))*24) - Math.trunc((duration.asDays() - Math.trunc(duration.asDays()))*24)) * 60);
                 
-
                 res.render('home', {totalmsg:Menssagens.length, 
                                     dtinicio: Menssagens[0].data.toLocaleDateString( 'pt-br', options),
                                     dtfim: Menssagens[Menssagens.length-1].data.toLocaleDateString( 'pt-br', options),
