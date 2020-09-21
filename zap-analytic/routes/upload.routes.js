@@ -44,7 +44,6 @@ function atribLine(line){
     
 }
 
-
 function lineDivision(line){
     var contatoMensagem = line.substring(19,line.length)
     return contatoMensagem;
@@ -58,9 +57,6 @@ function FirstCharPosition(line, char){
     }
     return null;
 }
-
-
-
 
 function lineBreak(line){
     var remetenteMsg = lineDivision(line);
@@ -79,9 +75,8 @@ function lineBreak(line){
 
 }
 
-
 var contarDC;
-function contarDiasConversados(durationDias, dataInicio ){
+function contarDiasConversados(durationDias, dataInicio, Menssagens){
     var  MensagensAgrupadasDias =[];
     var  contDiasConversados = 0;
     let  dataAtual, dataFinal, d;
@@ -160,13 +155,6 @@ function identificarRemetentes(Menssagens){
     return remetentes;
 }
 
-// function quebraDeLinha (arraySlipString){
-//     if(arraySlipString[0].substring(2,3) === '/')
-//         if(arraySlipString[3].substring(arraySlipString[3].length-1, arraySlipString[3].length) === ':')
-//            return true 
-//    return false;        
-// }
-
 function filterGeneric (Menssagens, nome ){
     let menssagens = Menssagens.filter((line) => {
         return line.nome == nome;
@@ -237,7 +225,7 @@ function mediaPalavras(Mensagens, nome){
     return media;
 }
 
-function  mediaPalavrasContexto(contexto, nome){
+function mediaPalavrasContexto(contexto, nome){
     var Epalavras=0, N=0, media=0;
     var fi = [];
     var mensagens = filterGeneric(contexto, nome);
@@ -271,9 +259,73 @@ function  mediaPalavrasContexto(contexto, nome){
     return media;
 }
 
-var Menssagens= [];
-var sujeiras= [];
 
+function weekCont(Mensagem){
+
+    var data = [
+        {semana:'segunda',
+         cont: 0},
+         {semana:'terça',
+          cont: 0},
+         {semana:'quarta',
+          cont: 0},
+         {semana:'quinta',
+          cont: 0},
+         {semana:'sexta',
+          cont: 0},
+         {semana:'sabado',
+          cont: 0},
+         {semana:'domingo',
+          cont: 0}
+
+    ]
+
+    for(var i = 0; i <= Mensagem.length-1; i++){
+        
+        var dataedit = Mensagem[i].data.toLocaleDateString( 'pt-br', options);
+        var diaEdit = dataedit.split(' ')[0];
+        var dia = dataedit.split(' ')[0].substring(0,diaEdit.length-1);
+        
+        switch (dia) {
+            case 'segunda-feira':
+                data[0].cont +=1;
+                break;
+            case 'terça-feira':
+                data[1].cont +=1;
+                break;
+            case 'quarta-feira':
+                data[2].cont +=1;
+                break;
+            case 'quinta-feira':
+                data[3].cont +=1;
+              break;
+            case 'sexta-feira':
+                data[4].cont +=1;
+                break;
+            case 'sabado':
+                data[5].cont +=1;
+                break;
+            case 'domingo':
+                data[6].cont +=1;
+                break;
+                
+            default:
+              
+          }
+          
+    }
+    return data;
+}
+
+let options = {     
+    dateStyle: ('full' || 'long' || 'medium' || 'short' ), 
+    timeStyle: ('full' || 'long' || 'medium' || 'short' ), 
+}
+// char por remetente 
+// por mensagem 
+// por contexto
+
+// identificar imagem 
 module.exports = app => {
 
     app.get('/', function(req,res){
@@ -281,6 +333,8 @@ module.exports = app => {
     });
     
     app.post('/upload',upload.single("backup"), (req, res) =>{
+            var Menssagens= [];
+            var sujeiras= [];
 
             const rl = readline.createInterface({
                 input: fs.createReadStream('./uploads/file.txt')
@@ -303,17 +357,13 @@ module.exports = app => {
                         // deleta a linha 
                     }
                 }else{
-                    // Menssagens.push(atribLine(splitString(line, ' ')));
                     Menssagens.push(atribLine(line));
                 }     
             });
             rl.on('close', () => {
                 
                 fs.unlinkSync("./uploads/file.txt"); 
-                let options = {     
-                    dateStyle: ('full' || 'long' || 'medium' || 'short' ), 
-                    timeStyle: ('full' || 'long' || 'medium' || 'short' ), 
-                }
+               
            
                 var fim = moment(Menssagens[Menssagens.length-1].data);
                 var inicio = moment(Menssagens[0].data)
@@ -321,7 +371,7 @@ module.exports = app => {
                 
                 var  MensagensAgrupadasDias =[];
                  
-                MensagensAgrupadasDias = contarDiasConversados(duration.asDays(), inicio.toDate());
+                MensagensAgrupadasDias = contarDiasConversados(duration.asDays(), inicio.toDate(), Menssagens);
                 var msgsRemententes = [];
                 var media;
                 var contextos = AgruparContextos(Menssagens);
@@ -359,6 +409,7 @@ module.exports = app => {
                                     horasDias: horas,
                                     minutosHoras: minutos,
                                     convDias: contarDC,
+                                    week: weekCont(Menssagens),
                                     });
             });
         //   

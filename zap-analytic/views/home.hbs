@@ -8,26 +8,45 @@
     <p> {{dias}} dias, {{horasDias}} horas e {{minutosHoras}} minutos de conversas.</p>
     <p> <b>Quantidade de dias com alguma mensagem</b> :{{convDias}} </p>
     <p> <b>Total de mensagens </b>: {{totalmsg}}</p>
+
+    <h4> Dias das semanas:</h4>
+     {{#each week as |item| }}
+        <p><b>{{item.semana}}</b>: {{item.cont}}</p>
+     {{/each}}
     <br>
 
     <h2>Informações individuais</h2>
+    <p><b>(RT)</b> - Nome do contato remetente </p>
+    <p><b>(QM)</b> - Quantidade de mensagens enviadas </p>
+    <p><b>(MP)</b> - Média de palavras escritas por mensagem. </p>
+    <p><b>(MM)</b> - Média de mensagens enviadas em conjunto. </p>
+    <p><b>(PC)</b> - Média de palaras enviadas por conjunto de mensagens </p>
+
     <table class="table">
                 <thead class="thead-dark">
                     <tr>
                     <th scope="col">Contato (RT)</th>
+                    <th scope="col">            </th>
                     <th scope="col">Quantidade M. (QM)</th>
+                    <th scope="col">            </th>
                     <th scope="col">Media P. (MP)</th>
+                    <th scope="col">            </th>
                     <th scope="col">Mensagens .M (MM)</th>
-                    <th scope="col">Media P. Contexto (MM)</th>
+                    <th scope="col">            </th>
+                    <th scope="col">Media P. Contexto (PC)</th>
                     </tr>
                 </thead>
                 <tbody>
                  {{#each msgsRemetentes as |item| }}
                     <tr>
                         <th scope="row">{{item.nome}}</th>
+                        <td>             </td>
                         <td>{{item.mgsrt.length}}</td>
+                        <td>             </td>
                         <td>{{item.mediaPalavras}}</td>
+                        <td>             </td>
                         <td>{{item.mediaMsgContexto}}</td>
+                        <td>             </td>
                         <td>{{item.mediaPalavrasContexto}}</td>
                     </tr>
                  {{/each}}
