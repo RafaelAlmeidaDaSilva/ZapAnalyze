@@ -10,9 +10,35 @@
     <p> <b>Total de mensagens </b>: {{totalmsg}}</p>
 
     <h4> Dias das semanas:</h4>
-     {{#each week as |item| }}
-        <p><b>{{item.semana}}</b>: {{item.cont}}</p>
-     {{/each}}
+    <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                    <th scope="col">Dia da semana</th>
+                    <th scope="col">            </th>
+                    <th scope="col">Mensagens</th>
+                    <th scope="col">            </th>
+                    <th scope="col">Qtd dias</th>
+                    <th scope="col">            </th>
+                    <th scope="col">Media diaria</th>
+                 
+                    </tr>
+                </thead>
+                <tbody>
+                 {{#each week as |item| }}
+                    <tr>
+                        <th scope="row">{{item.semana}}</th>
+                        <td>             </td>
+                        <td>{{item.cont}}</td>
+                        <td>             </td>
+                        <td>{{item.qtd}}</td>
+                        <td>             </td>
+                        <td>{{item.media}}</td>
+
+                    </tr>
+                 {{/each}}
+           </tbody>
+   </table>
+
     <br>
 
     <h2>Informações individuais</h2>

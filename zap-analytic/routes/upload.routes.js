@@ -259,26 +259,91 @@ function mediaPalavrasContexto(contexto, nome){
     return media;
 }
 
+function weekContDays(week, menssagens){
+    
+
+    var fim = moment(menssagens[menssagens.length-1].data);
+    var inicio = moment(menssagens[0].data)
+    var duration =  moment.duration(fim.diff(inicio));
+
+    d = moment(menssagens[0].data);
+    
+    for(var i = 0 ; i <= duration.days(); i++){
+        var current = d;
+        current = moment(current.toDate().setHours(0,0,0,0));
+        current.add(i, 'day'); 
+        var edit =  current.toDate();
+        var dataedit = edit.toLocaleDateString( 'pt-br', options);
+        var diaEdit = dataedit.split(' ')[0];
+        var dia = dataedit.split(' ')[0].substring(0,diaEdit.length-1);
+
+        switch (dia) {
+            case 'segunda-feira':
+                week[0].qtd +=1;
+                break;
+            case 'terça-feira':
+                week[1].qtd +=1;
+                break;
+            case 'quarta-feira':
+                week[2].qtd +=1;
+                break;
+            case 'quinta-feira':
+                week[3].qtd +=1;
+              break;
+            case 'sexta-feira':
+                week[4].qtd +=1;
+                break;
+            case 'sábado':
+                week[5].qtd +=1;
+                break;
+            case 'domingo':
+                week[6].qtd +=1;
+                break;
+                
+            default:
+              
+          }
+    }
+
+    return week;
+   
+}
+
 
 function weekCont(Mensagem){
 
     var data = [
         {semana:'segunda',
-         cont: 0},
+         cont: 0,
+         qtd: 0,
+         media: 0},
          {semana:'terça',
-          cont: 0},
+          cont: 0,
+         qtd: 0,
+         media: 0},
          {semana:'quarta',
-          cont: 0},
+          cont: 0,
+         qtd: 0,
+         media: 0},
          {semana:'quinta',
-          cont: 0},
+          cont: 0,
+         qtd: 0,
+         media: 0},
          {semana:'sexta',
-          cont: 0},
+          cont: 0,
+          qtd: 0,
+         media: 0},
          {semana:'sabado',
-          cont: 0},
+          cont: 0,
+         qtd: 0,
+         media: 0},
          {semana:'domingo',
-          cont: 0}
+          cont: 0,
+         qtd: 0,
+         media: 0}
+    ];
 
-    ]
+    data = weekContDays(data, Mensagem);
 
     for(var i = 0; i <= Mensagem.length-1; i++){
         
@@ -302,7 +367,7 @@ function weekCont(Mensagem){
             case 'sexta-feira':
                 data[4].cont +=1;
                 break;
-            case 'sabado':
+            case 'sábado':
                 data[5].cont +=1;
                 break;
             case 'domingo':
@@ -314,8 +379,17 @@ function weekCont(Mensagem){
           }
           
     }
-    return data;
+    return weekMediaCont(data);
 }
+
+function weekMediaCont(week){
+   
+    for(var i =0 ; i <= week.length-1; i++)
+        week[i].media = week[i].cont / week[i].qtd
+
+   return week;     
+}
+
 
 let options = {     
     dateStyle: ('full' || 'long' || 'medium' || 'short' ), 
@@ -412,7 +486,7 @@ module.exports = app => {
                                     week: weekCont(Menssagens),
                                     });
             });
-        //   
+        
         
     });
     
