@@ -412,6 +412,67 @@ function porcent(max, x){
     return (x * 100) / max;
 }
 
+function periodCont(mensagem){
+
+    period =[
+        {periodo:'manha',
+         cont:0,
+         qtd:0,
+         media: 0,
+         porcent: 0},
+         {periodo:'tarde',
+         cont:0,
+         qtd:0,
+         media: 0,
+         porcent: 0},
+         {periodo:'noite',
+         cont:0,
+         qtd:0,
+         media: 0,
+         porcent: 0},
+         {periodo:'madrugada',
+         cont:0,
+         qtd:0,
+         media: 0,
+         porcent: 0}
+    ];
+
+    for(var i= 0; i <= mensagem.length-1 ; i++){
+        var periodo = getPeriodWithHours(mensagem[i].data.getHours())
+        switch (periodo) {
+            case 'manha':
+                period[0].cont++;
+                break;
+            case 'tarde':
+                period[1].cont++;
+                break;
+            case 'noite':
+                period[2].cont++;
+                break;
+            case 'madrugada':
+                period[3].cont++;
+              break;
+                
+            default:
+              
+          }
+
+    }
+    return period;
+}
+
+
+function getPeriodWithHours(hora){
+    
+    if(hora >= 6 && hora <= 11)
+        return 'manha'
+    if(hora >= 12 && hora <= 17)
+        return 'tarde'
+    if(hora >= 18 && hora <= 23)
+        return 'noite'
+    if(hora >= 0 && hora <= 5)
+        return 'madrugada'
+}
 
 let options = {     
     dateStyle: ('full' || 'long' || 'medium' || 'short' ), 
@@ -506,6 +567,7 @@ module.exports = app => {
                                     minutosHoras: minutos,
                                     convDias: contarDC,
                                     week: weekCont(Menssagens),
+                                    periodos: periodCont(Menssagens),
                                     });
             });
         

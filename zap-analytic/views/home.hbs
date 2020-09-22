@@ -43,6 +43,26 @@
            </tbody>
    </table>
 
+   <h4> Periodos:</h4>
+    <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Periodo</th>
+                        <th scope="col">            </th>
+                        <th scope="col">Mensagens</th>
+                    </tr>
+                </thead>
+                <tbody>
+                 {{#each periodos as |item| }}
+                    <tr>
+                        <th scope="row">{{item.periodo}}</th>
+                        <td>             </td>
+                        <td>{{item.cont}}</td>
+                    </tr>
+                 {{/each}}
+           </tbody>
+   </table>
+
     <br>
 
     <h2>Informações individuais</h2>
