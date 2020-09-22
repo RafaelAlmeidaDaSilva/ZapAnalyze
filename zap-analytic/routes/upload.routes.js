@@ -268,7 +268,7 @@ function weekContDays(week, menssagens){
 
     d = moment(menssagens[0].data);
     
-    for(var i = 0 ; i <= duration.days(); i++){
+    for(var i = 0 ; i <= duration.asDays(); i++){
         var current = d;
         current = moment(current.toDate().setHours(0,0,0,0));
         current.add(i, 'day'); 
@@ -309,38 +309,44 @@ function weekContDays(week, menssagens){
    
 }
 
-
 function weekCont(Mensagem){
 
     var data = [
         {semana:'segunda',
          cont: 0,
          qtd: 0,
-         media: 0},
+         media: 0,
+         porcent: 0},
          {semana:'terça',
           cont: 0,
          qtd: 0,
-         media: 0},
+         media: 0,
+         porcent: 0},
          {semana:'quarta',
           cont: 0,
          qtd: 0,
-         media: 0},
+         media: 0,
+         porcent: 0},
          {semana:'quinta',
           cont: 0,
          qtd: 0,
-         media: 0},
+         media: 0,
+         porcent: 0},
          {semana:'sexta',
           cont: 0,
           qtd: 0,
-         media: 0},
+         media: 0,
+         porcent: 0},
          {semana:'sabado',
           cont: 0,
          qtd: 0,
-         media: 0},
+         media: 0,
+         porcent: 0},
          {semana:'domingo',
           cont: 0,
          qtd: 0,
-         media: 0}
+         media: 0,
+         porcent: 0}
     ];
 
     data = weekContDays(data, Mensagem);
@@ -387,7 +393,23 @@ function weekMediaCont(week){
     for(var i =0 ; i <= week.length-1; i++)
         week[i].media = week[i].cont / week[i].qtd
 
-   return week;     
+   return weekMediaPorcent(week);     
+}
+
+function weekMediaPorcent(week){
+    var max = 0;
+    for(var i =0 ; i <= week.length-1; i++)
+        max += week[i].media;
+
+    for(var i = 0; i <= week.length-1; i++)
+        week[i].porcent = porcent(max, week[i].media);
+    
+
+    return week;
+}
+
+function porcent(max, x){
+    return (x * 100) / max;
 }
 
 
