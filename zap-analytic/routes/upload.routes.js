@@ -385,25 +385,24 @@ function weekCont(Mensagem){
           }
           
     }
-    return weekMediaCont(data);
+    return mediaCont(data);
 }
 
-function weekMediaCont(week){
+function mediaCont(week){
    
     for(var i =0 ; i <= week.length-1; i++)
         week[i].media = week[i].cont / week[i].qtd
 
-   return weekMediaPorcent(week);     
+   return mediaPorcent(week);     
 }
 
-function weekMediaPorcent(week){
+function mediaPorcent(week){
     var max = 0;
     for(var i =0 ; i <= week.length-1; i++)
         max += week[i].media;
 
     for(var i = 0; i <= week.length-1; i++)
         week[i].porcent = porcent(max, week[i].media);
-    
 
     return week;
 }
@@ -437,6 +436,8 @@ function periodCont(mensagem){
          porcent: 0}
     ];
 
+    period = periodContHours(period,mensagem);
+
     for(var i= 0; i <= mensagem.length-1 ; i++){
         var periodo = getPeriodWithHours(mensagem[i].data.getHours())
         switch (periodo) {
@@ -458,9 +459,8 @@ function periodCont(mensagem){
           }
 
     }
-    return period;
+    return mediaCont(period);
 }
-
 
 function getPeriodWithHours(hora){
     
@@ -472,6 +472,46 @@ function getPeriodWithHours(hora){
         return 'noite'
     if(hora >= 0 && hora <= 5)
         return 'madrugada'
+}
+
+function periodContHours(period, mensagens){
+    
+    var fim = moment(mensagens[mensagens.length-1].data);
+    var inicio = moment(mensagens[0].data)
+    var duration =  moment.duration(fim.diff(inicio));
+
+    d = moment(mensagens[0].data);
+    
+    for(var i = 0 ; i <= duration.asHours(); i++){
+        var current = d;
+        current = moment(current.toDate().setHours(0,0,0,0));
+        current.add(i, 'hours'); 
+        var hora = getPeriodWithHours(current.toDate().getHours())
+       
+        switch (hora) {
+            case 'manha':
+                period[0].qtd ++; 
+                break;
+            case 'tarde':
+                period[1].qtd ++; 
+                break;
+            case 'noite':
+                period[2].qtd ++; 
+                break;
+            case 'madrugada':
+                period[3].qtd ++; 
+              break;
+            default:
+              
+          }
+    }
+
+    return period;
+   
+}
+
+function periodMediaCont(period){
+
 }
 
 let options = {     

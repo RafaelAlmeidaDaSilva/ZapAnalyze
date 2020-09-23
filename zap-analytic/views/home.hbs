@@ -50,6 +50,8 @@
                         <th scope="col">Periodo</th>
                         <th scope="col">            </th>
                         <th scope="col">Mensagens</th>
+                         <th scope="col">            </th>
+                        <th scope="col">horas por periodo</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,6 +60,12 @@
                         <th scope="row">{{item.periodo}}</th>
                         <td>             </td>
                         <td>{{item.cont}}</td>
+                        <td>             </td>
+                        <td>{{item.qtd}}</td>
+                        <td>             </td>
+                        <td>{{item.media}}</td>
+                        <td>             </td>
+                        <td>{{item.porcent}} %</td>
                     </tr>
                  {{/each}}
            </tbody>
