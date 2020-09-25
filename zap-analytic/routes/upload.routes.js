@@ -1,7 +1,9 @@
+//-------------------------------------------------------------------
 const upload = require('../libs/config-upload');
 const readline = require('readline');
 const fs = require('fs');
 const moment = require('moment');
+//-------------------------------------------------------------------
 
 function splitString(stringToSplit, separator) {
     var arrayOfStrings = stringToSplit.split(separator);
@@ -12,6 +14,28 @@ function splitString(stringToSplit, separator) {
     return arrayOfStrings;
 }
 
+function exist(array, dado){
+    for(j= 0 ; j <= array.length-1; j++)
+        if(array[j].nome === dado)
+            return true;
+    return false;
+}   
+
+function filterGeneric (Menssagens, nome ){
+    let menssagens = Menssagens.filter((line) => {
+        return line.nome == nome;
+    });
+
+    return menssagens;
+}
+
+let options = {     
+    dateStyle: ('full' || 'long' || 'medium' || 'short' ), 
+    timeStyle: ('full' || 'long' || 'medium' || 'short' ), 
+}
+
+
+//-------------------------------------------------------------------
 function atribLine(line){
 
     var dataHora = line.substring(0, 16);
@@ -75,6 +99,8 @@ function lineBreak(line){
 
 }
 
+//-------------------------------------------------------------------
+
 var contarDC;
 function contarDiasConversados(durationDias, dataInicio, Menssagens){
     var  MensagensAgrupadasDias =[];
@@ -115,12 +141,6 @@ function contarDiasConversados(durationDias, dataInicio, Menssagens){
     return MensagensAgrupadasDias;
 }
 
-function exist(array, dado){
-    for(j= 0 ; j <= array.length-1; j++)
-        if(array[j].nome === dado)
-            return true;
-    return false;
-}   
 
 function identificarRemetentes(Menssagens){
     var remetentes = []
@@ -155,13 +175,6 @@ function identificarRemetentes(Menssagens){
     return remetentes;
 }
 
-function filterGeneric (Menssagens, nome ){
-    let menssagens = Menssagens.filter((line) => {
-        return line.nome == nome;
-    });
-
-    return menssagens;
-}
 
 function AgruparContextos(Menssagens){
     var antes = {};
@@ -213,18 +226,6 @@ function MediaContexto (AgrupamentoContexto, remetente){
     return E/N;
 }
 
-function mediaPalavras(Mensagens, nome){
-    var Epalavras=0, N=0, media=0;
-    var mensagens = filterGeneric(Mensagens, nome);
-    for(var i = 0; i< mensagens.length-1 ; i++)
-    {
-        Epalavras += splitString(mensagens[i].texto, ' ').length;
-        N++;
-    }
-    media = Epalavras / N;
-    return media;
-}
-
 function mediaPalavrasContexto(contexto, nome){
     var Epalavras=0, N=0, media=0;
     var fi = [];
@@ -259,6 +260,20 @@ function mediaPalavrasContexto(contexto, nome){
     return media;
 }
 
+function mediaPalavras(Mensagens, nome){
+    var Epalavras=0, N=0, media=0;
+    var mensagens = filterGeneric(Mensagens, nome);
+    for(var i = 0; i< mensagens.length-1 ; i++)
+    {
+        Epalavras += splitString(mensagens[i].texto, ' ').length;
+        N++;
+    }
+    media = Epalavras / N;
+    return media;
+}
+
+
+//------------------------------------------------------------
 function weekContDays(week, menssagens){
     
 
@@ -388,29 +403,7 @@ function weekCont(Mensagem){
     return mediaCont(data);
 }
 
-function mediaCont(week){
-   
-    for(var i =0 ; i <= week.length-1; i++)
-        week[i].media = week[i].cont / week[i].qtd
-
-   return mediaPorcent(week);     
-}
-
-function mediaPorcent(week){
-    var max = 0;
-    for(var i =0 ; i <= week.length-1; i++)
-        max += week[i].media;
-
-    for(var i = 0; i <= week.length-1; i++)
-        week[i].porcent = porcent(max, week[i].media);
-
-    return week;
-}
-
-function porcent(max, x){
-    return (x * 100) / max;
-}
-
+//------------------------------------------------------------
 function periodCont(mensagem){
 
     period =[
@@ -514,15 +507,36 @@ function periodMediaCont(period){
 
 }
 
-let options = {     
-    dateStyle: ('full' || 'long' || 'medium' || 'short' ), 
-    timeStyle: ('full' || 'long' || 'medium' || 'short' ), 
-}
-// char por remetente 
-// por mensagem 
-// por contexto
+//-------------------------------------------------------------------
+function mediaCont(distribuicao){
+   
+    for(var i =0 ; i <= distribuicao.length-1; i++)
+        distribuicao[i].media = distribuicao[i].cont / distribuicao[i].qtd
 
-// identificar imagem 
+   return mediaPorcent(distribuicao);     
+}
+ 
+function mediaPorcent(distribuicao){
+    var max = 0;
+    for(var i =0 ; i <= distribuicao.length-1; i++)
+        max += distribuicao[i].media;
+
+    for(var i = 0; i <= distribuicao.length-1; i++)
+        distribuicao[i].porcent = porcent(max, distribuicao[i].media);
+
+    return distribuicao;
+}
+
+function porcent(max, x){
+    return (x * 100) / max;
+}
+
+
+//-------------------------------------------------------------------
+
+
+
+//-------------------------------------------------------------------
 module.exports = app => {
 
     app.get('/', function(req,res){
@@ -589,10 +603,6 @@ module.exports = app => {
                    msgsRemententes.push(msgsRt); 
                 });
                 
-                // console.log("Ultima mensagem: ",Menssagens[Menssagens.length-1].data);
-                // console.log("Mensagem:", Menssagens[Menssagens.length-1]);
-                
-                // console.log("Primeira mensagem",Menssagens[0].data);
 
                 var dias = Math.trunc(duration.asDays());
                 var horas = Math.trunc(((duration.asDays() - Math.trunc(duration.asDays()))*24));
