@@ -141,7 +141,6 @@ function contarDiasConversados(durationDias, dataInicio, Menssagens){
     return MensagensAgrupadasDias;
 }
 
-
 function identificarRemetentes(Menssagens){
     var remetentes = []
 
@@ -174,7 +173,6 @@ function identificarRemetentes(Menssagens){
                 // pula para proxima linha 
     return remetentes;
 }
-
 
 function AgruparContextos(Menssagens){
     var antes = {};
@@ -503,9 +501,7 @@ function periodContHours(period, mensagens){
    
 }
 
-function periodMediaCont(period){
 
-}
 
 //-------------------------------------------------------------------
 function mediaCont(distribuicao){
@@ -530,7 +526,6 @@ function mediaPorcent(distribuicao){
 function porcent(max, x){
     return (x * 100) / max;
 }
-
 
 //-------------------------------------------------------------------
 
