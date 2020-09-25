@@ -3,8 +3,9 @@ const upload = require('../libs/config-upload');
 const readline = require('readline');
 const fs = require('fs');
 const moment = require('moment');
-//-------------------------------------------------------------------
 
+
+//-------------------------------------------------------------------
 function splitString(stringToSplit, separator) {
     var arrayOfStrings = stringToSplit.split(separator);
   
@@ -36,7 +37,7 @@ let options = {
 
 
 //-------------------------------------------------------------------
-function atribLine(line){
+function assignLine(line){
 
     var dataHora = line.substring(0, 16);
     var arraySlipString = dataHora.split(' ');
@@ -51,7 +52,7 @@ function atribLine(line){
     var dtMenssagem = new Date(ano,mes.toString(),dia,hora,min);
 
      var remetenteMsg = lineDivision(line);
-     var position = FirstCharPosition(remetenteMsg, ':');
+     var position = firstCharPosition(remetenteMsg, ':');
      
      var rtMenssagem = remetenteMsg.substring(0,position);
  
@@ -73,7 +74,7 @@ function lineDivision(line){
     return contatoMensagem;
 }
 
-function FirstCharPosition(line, char){
+function firstCharPosition(line, char){
     for(var i = 0; i < line.length-1 ; i++)
     {
         if(line.substring(i, i+1) == char)
@@ -89,7 +90,7 @@ function lineBreak(line){
     {
         if(remetenteMsg !== null) // quer dizer que e um quebra de linha
         {
-            var position = FirstCharPosition(remetenteMsg, ':');
+            var position = firstCharPosition(remetenteMsg, ':');
             if (position !== null)
                 return true;
             
@@ -102,7 +103,7 @@ function lineBreak(line){
 //-------------------------------------------------------------------
 
 var contarDC;
-function contarDiasConversados(durationDias, dataInicio, Menssagens){
+function countDaysTalked(durationDias, dataInicio, Menssagens){
     var  MensagensAgrupadasDias =[];
     var  contDiasConversados = 0;
     let  dataAtual, dataFinal, d;
@@ -141,7 +142,7 @@ function contarDiasConversados(durationDias, dataInicio, Menssagens){
     return MensagensAgrupadasDias;
 }
 
-function identificarRemetentes(Menssagens){
+function identifySenders(Menssagens){
     var remetentes = []
 
     // percorrer por toda lista de menssagem 
@@ -174,7 +175,7 @@ function identificarRemetentes(Menssagens){
     return remetentes;
 }
 
-function AgruparContextos(Menssagens){
+function toGroupMenssageContext(Menssagens){
     var antes = {};
     var idContexto;
     var contextos = [];
@@ -210,7 +211,7 @@ function AgruparContextos(Menssagens){
       
 }
 
-function MediaContexto (AgrupamentoContexto, remetente){
+function mediaContext (AgrupamentoContexto, remetente){
     var ContextosRemetente =  filterGeneric(AgrupamentoContexto, remetente);
     var N=0 , E=0;
 
@@ -224,7 +225,7 @@ function MediaContexto (AgrupamentoContexto, remetente){
     return E/N;
 }
 
-function mediaPalavrasContexto(contexto, nome){
+function mediaWordsContext(contexto, nome){
     var Epalavras=0, N=0, media=0;
     var fi = [];
     var mensagens = filterGeneric(contexto, nome);
@@ -258,7 +259,7 @@ function mediaPalavrasContexto(contexto, nome){
     return media;
 }
 
-function mediaPalavras(Mensagens, nome){
+function mediaWords(Mensagens, nome){
     var Epalavras=0, N=0, media=0;
     var mensagens = filterGeneric(Mensagens, nome);
     for(var i = 0; i< mensagens.length-1 ; i++)
@@ -401,6 +402,7 @@ function weekCont(Mensagem){
     return mediaCont(data);
 }
 
+
 //------------------------------------------------------------
 function periodCont(mensagem){
 
@@ -527,7 +529,7 @@ function porcent(max, x){
     return (x * 100) / max;
 }
 
-//-------------------------------------------------------------------
+
 
 
 
@@ -563,7 +565,7 @@ module.exports = app => {
                         // deleta a linha 
                     }
                 }else{
-                    Menssagens.push(atribLine(line));
+                    Menssagens.push(assignLine(line));
                 }     
             });
             rl.on('close', () => {
@@ -577,20 +579,20 @@ module.exports = app => {
                 
                 var  MensagensAgrupadasDias =[];
                  
-                MensagensAgrupadasDias = contarDiasConversados(duration.asDays(), inicio.toDate(), Menssagens);
+                MensagensAgrupadasDias = countDaysTalked(duration.asDays(), inicio.toDate(), Menssagens);
                 var msgsRemententes = [];
                 var media;
-                var contextos = AgruparContextos(Menssagens);
+                var contextos = toGroupMenssageContext(Menssagens);
                 var dados=[];
 
-                identificarRemetentes(Menssagens).forEach(element => {
-                    media = MediaContexto(contextos, element.nome);
+                identifySenders(Menssagens).forEach(element => {
+                    media = mediaContext(contextos, element.nome);
                     
                     var msgsRt={
                        nome: element.nome,
                        mediaMsgContexto: media,
-                       mediaPalavras: mediaPalavras(Menssagens, element.nome),
-                       mediaPalavrasContexto: mediaPalavrasContexto(contextos, element.nome),
+                       mediaPalavras: mediaWords(Menssagens, element.nome),
+                       mediaPalavrasContexto: mediaWordsContext(contextos, element.nome),
                        msgsContexto: filterGeneric(contextos, element.nome),  
                        mgsrt: filterGeneric(Menssagens,element.nome)
                    };
