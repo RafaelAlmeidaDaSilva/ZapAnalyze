@@ -1,8 +1,10 @@
 
 ###Legal
+
 Este código não é de forma alguma afiliado, autorizado, mantido, patrocinado ou endossado pelo WhatsApp ou qualquer de suas afiliadas ou subsidiárias. Este é um software independente e não oficial. Use por sua conta e risco.
 
 ###License
+
 A Licença MIT (MIT)
 
 Copyright (c) 2018
