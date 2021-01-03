@@ -1,3 +1,8 @@
+### Get Started
+    Criar uma uma pasta com o nome de "uploads" na raiz do projeto 
+    e executar os comandos abaixo. ignorando o primeiro comando "npm init"
+    
+
 ### Commands
     ~ npm init 
     ~ npm install express
