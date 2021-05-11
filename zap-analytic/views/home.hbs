@@ -8,8 +8,96 @@
     <p> {{dias}} dias, {{horasDias}} horas e {{minutosHoras}} minutos de conversas.</p>
     <p> <b>Quantidade de dias com alguma mensagem</b> :{{convDias}} </p>
     <p> <b>Total de mensagens </b>: {{totalmsg}}</p>
+     
+     <br>
+    <h2>Informações individuais</h2>
+    <p><b>(RT)</b> - Nome do contato remetente </p>
+    <p><b>(QM)</b> - Quantidade de mensagens enviadas </p>
+    <p><b>(MP)</b> - Média de palavras por mensagem. </p>
+    <p><b>(MM)</b> - Média de mensagens em conjunto. </p>
+    <p><b>(PC)</b> - Média de palavras por conjunto de mensagens </p>
+    <p><b>(ST)</b> - Média de contextualização das mensagens em conjunto </p>
 
-    <h4> Dias das semanas:</h4>
+        <table class="table">
+                    <thead class="thead-dark">
+                        <tr>
+                        <th scope="col"> Contato (RT)</th>
+                        <th scope="col">            </th>
+                        <th scope="col"> Quantidade (QM)</th>
+                        <th scope="col">            </th>
+                        <th scope="col"> Palavras (MP)</th>
+                        <th scope="col">            </th>
+                        <th scope="col"> Mensagens (MM)</th>
+                        <th scope="col">            </th>
+                        <th scope="col"> Contexto (PC)</th>
+                        <th scope="col">            </th>
+                        <th scope="col">            </th>
+                        <th scope="col"> MM * ( MP / PC ) Status (ST)</th>
+                        <th scope="col">            </th>
+                        <th scope="col">            </th>
+                        <th scope="col"> MM / ( MP / PC )  Score  (ST)</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {{#each msgsRemetentes as |item| }}
+                        <tr>
+                            <th scope="row">{{item.nome}}</th>
+                            <td>             </td>
+                            <td>{{item.mgsrt.length}}</td>
+                            <td>             </td>
+                            <td>{{item.mediaPalavras}}</td>
+                            <td>             </td>
+                            <td>{{item.mediaMsgContexto}}</td>
+                            <td>             </td>
+                            <td>{{item.mediaPalavrasContexto}}</td>
+                            <td>             </td>
+                            <td>             </td>
+                            <td> {{item.status}} </td>
+                            <td>             </td>
+                            <td>             </td>
+                            <td>{{item.score}}</td>
+                        </tr>
+                    {{/each}}
+            </tbody>
+    </table>
+
+
+     <br>
+    
+    <h2> Distribuição de frequência </h2>
+    <p><b>(fi)</b> - Frequência de ocorrência </p>
+    <p><b>(xi)</b> - Quantidade de mensagens enviadas </p>
+    <p><b>(xi*fi)</b> - Média de palavras escritas por mensagem. </p>
+    <p><b>(f.rel)</b> - Média de mensagens enviadas em conjunto. </p>
+  
+   
+    <table class="table">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col"> contato (ct)</th>
+                        <th scope="col">            </th>
+                        <th scope="col"> frequecia (fi)</th>
+                        <th scope="col">            </th>
+                        <th scope="col"> Mensagens (f.rel)</th>
+                        <th scope="col">            </th>
+                    </tr>
+                </thead>
+                <tbody>
+                 {{#each distribFrequence as |item| }}
+                    <tr>
+                        <th scope="row">{{item.element.nome}}</th>
+                        <td>             </td>
+                        <td>{{item.element.mgsrt.length}}</td>
+                        <td>             </td>
+                        <td>{{item.frel}} %</td>
+                        <td>             </td>
+                    </tr>
+               {{/each}} 
+           </tbody>
+    </table>
+
+    <h3> Dias das semanas:</h3>
     <table class="table">
                 <thead class="thead-dark">
                     <tr>
@@ -42,9 +130,9 @@
                  {{/each}}
            </tbody>
    </table>
-
-   <h4> Periodos:</h4>
-    <table class="table">
+   <br>
+   <h3> Periodos:</h3>
+   <table class="table">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Periodo</th>
@@ -75,50 +163,8 @@
            </tbody>
    </table>
 
-    <br>
-
-    <h2>Informações individuais</h2>
-    <p><b>(RT)</b> - Nome do contato remetente </p>
-    <p><b>(QM)</b> - Quantidade de mensagens enviadas </p>
-    <p><b>(MP)</b> - Média de palavras escritas por mensagem. </p>
-    <p><b>(MM)</b> - Média de mensagens enviadas em conjunto. </p>
-    <p><b>(PC)</b> - Média de palaras enviadas por conjunto de mensagens </p>
-
-    <table class="table">
-                <thead class="thead-dark">
-                    <tr>
-                    <th scope="col">Contato (RT)</th>
-                    <th scope="col">            </th>
-                    <th scope="col">Quantidade M. (QM)</th>
-                    <th scope="col">            </th>
-                    <th scope="col">Media P. (MP)</th>
-                    <th scope="col">            </th>
-                    <th scope="col">Mensagens .M (MM)</th>
-                    <th scope="col">            </th>
-                    <th scope="col">Media P. Contexto (PC)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                 {{#each msgsRemetentes as |item| }}
-                    <tr>
-                        <th scope="row">{{item.nome}}</th>
-                        <td>             </td>
-                        <td>{{item.mgsrt.length}}</td>
-                        <td>             </td>
-                        <td>{{item.mediaPalavras}}</td>
-                        <td>             </td>
-                        <td>{{item.mediaMsgContexto}}</td>
-                        <td>             </td>
-                        <td>{{item.mediaPalavrasContexto}}</td>
-                    </tr>
-                 {{/each}}
-           </tbody>
-   </table>
-
+  
 
    
-   
 
-    
-
-    
+  
