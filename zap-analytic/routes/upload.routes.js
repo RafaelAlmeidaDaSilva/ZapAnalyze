@@ -3,6 +3,7 @@ const upload = require('../libs/config-upload');
 const readline = require('readline');
 const fs = require('fs');
 const moment = require('moment');
+const { Console } = require('console');
 
 
 //-------------------------------------------------------------------
@@ -167,11 +168,8 @@ function identifySenders(Menssagens){
        }
     }
       
-        // verificar se ja contem remetente
-            // senao houver
-                // adiciona
-            // se houver  
-                // pula para proxima linha 
+       
+
     return remetentes;
 }
 
@@ -270,6 +268,19 @@ function mediaWords(Mensagens, nome){
     media = Epalavras / N;
     return media;
 }
+//-----------------------------------------------------
+function mediaLetter(){
+
+}
+
+function mediaLetterMessage(){
+
+}
+
+function mediaLetterContextMessage(){
+
+}
+
 
 
 //------------------------------------------------------------
@@ -525,13 +536,45 @@ function mediaPorcent(distribuicao){
     return distribuicao;
 }
 
+
 function porcent(max, x){
     return (x * 100) / max;
 }
 
+//------------------------------[novo]
 
+function contMenssagensRemetentes(msgsRemententes){
+    var totalRemetentes=0;
+    msgsRemententes.forEach(item=> {
+        totalRemetentes +=  item.mgsrt.length;
+    });
+    
+    return totalRemetentes;
+} 
 
+function frequenciaRelativa(total, frequencia){
+    return (frequencia / total)*100; 
+ }
 
+ function distribuicaoFrequencia (msgsRemententes){
+    var totalRemetentes = 0; 
+    var freqRelativa = 0;
+    var msgs = []; 
+
+    msgsRemententes.forEach(item => {
+        totalRemetentes = contMenssagensRemetentes(msgsRemententes);
+        freqRelativa = frequenciaRelativa(totalRemetentes, item.mgsrt.length);
+        mg = {
+            element: item,
+            frel: freqRelativa,
+            
+        }  
+        
+        msgs.push(mg);
+    });
+    
+    return msgs;
+ }
 
 //-------------------------------------------------------------------
 module.exports = app => {
@@ -572,6 +615,7 @@ module.exports = app => {
                 
                 fs.unlinkSync("./uploads/file.txt"); 
                
+          
            
                 var fim = moment(Menssagens[Menssagens.length-1].data);
                 var inicio = moment(Menssagens[0].data)
@@ -581,30 +625,84 @@ module.exports = app => {
                  
                 MensagensAgrupadasDias = countDaysTalked(duration.asDays(), inicio.toDate(), Menssagens);
                 var msgsRemententes = [];
+              
                 var media;
                 var contextos = toGroupMenssageContext(Menssagens);
                 var dados=[];
 
                 identifySenders(Menssagens).forEach(element => {
                     media = mediaContext(contextos, element.nome);
+                   
+                   // A ---------------------------------
                     
+                    function statusA(MM, MP, PC) {
+                        return   MM * ( MP / PC );
+                     }
+                     
+                     function scoreA(MM, MP, PC) {
+                        return   MM * ( (1/MP) / (1/PC) );
+                     }
+
+                   // B ---------------------------------
+                    
+                    // baseado na media harmonica
+                    function statusB(MM, MP, PC) {
+                        return   MM / ( MP / PC );
+                     }
+
+                    function scoreB(MM, MP, PC) {
+                        return   MM / ( (1/MP) / (1/PC) );
+                     }
+
+                   // C ---------------------------------
+                     
+                     //baseado na media ponderada
+                     function statusC(MM, MP, PC) {
+                        return   MM / ( MP * PC );
+                     }
+                     
+                     function scoreC(MM, MP, PC) {
+                        return   MM / ( (1/MP) * (1/PC) );
+                     }
+
+                   // D --------------------------------- 
+                    
+                     //baseado na media aritmética
+                    function statusD(MM, MP, PC) {
+                        return   MM / ( MP + PC );
+                    }
+                    function scoreD(MM, MP, PC) {
+                        return   MM / ( (1/MP) + (1/PC));
+                    }
+
+
+
+                    // tem outra formula mais precisa
+                    // queria estudar 
+                    var 
+                    var Vstatus = statusA(media,mediaWords(Menssagens, element.nome), mediaWordsContext(contextos, element.nome));
+                    var VScore = scoreA(media,mediaWords(Menssagens, element.nome), mediaWordsContext(contextos, element.nome));
                     var msgsRt={
                        nome: element.nome,
                        mediaMsgContexto: media,
                        mediaPalavras: mediaWords(Menssagens, element.nome),
                        mediaPalavrasContexto: mediaWordsContext(contextos, element.nome),
                        msgsContexto: filterGeneric(contextos, element.nome),  
-                       mgsrt: filterGeneric(Menssagens,element.nome)
+                       mgsrt: filterGeneric(Menssagens,element.nome),
+                       
                    };
                    
                    msgsRemententes.push(msgsRt); 
+                   
+                   
                 });
-                
-
+               
+               
+               
                 var dias = Math.trunc(duration.asDays());
                 var horas = Math.trunc(((duration.asDays() - Math.trunc(duration.asDays()))*24));
                 var minutos = Math.trunc((((duration.asDays() - Math.trunc(duration.asDays()))*24) - Math.trunc((duration.asDays() - Math.trunc(duration.asDays()))*24)) * 60);
-                
+
                 res.render('home', {totalmsg:Menssagens.length, 
                                     dtinicio: Menssagens[0].data.toLocaleDateString( 'pt-br', options),
                                     dtfim: Menssagens[Menssagens.length-1].data.toLocaleDateString( 'pt-br', options),
@@ -615,6 +713,8 @@ module.exports = app => {
                                     convDias: contarDC,
                                     week: weekCont(Menssagens),
                                     periodos: periodCont(Menssagens),
+                                    distribFrequence: distribuicaoFrequencia(msgsRemententes),
+                                    
                                     });
             });
         
