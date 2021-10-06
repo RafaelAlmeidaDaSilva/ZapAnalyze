@@ -45,7 +45,7 @@ O sistema é responsavel por efetuar a contagem  de mensagens por data, hora, au
     
 
 ### Commands
-   ``` 
+   ``` nodejs
     ~ npm init 
     ~ npm install express
     ~ npm install consign 
@@ -67,7 +67,8 @@ O sistema é responsavel por efetuar a contagem  de mensagens por data, hora, au
 ## Methods to implements
 - Identificador e contador de perguntas na conversa de cada remetente da conversa;
 - Identificar tipos de reciprocidade existentes;
-- Comparar reciprocidade
+- Comparar reciprocidade com base em um rating;
+- 
 
 
 ### Extracts methods 
