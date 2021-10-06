@@ -5,6 +5,12 @@
  - Coaching Profissional (Profissionais de Coaching);
  - Psychologists (Psicólogos);
  - Relationship audit (auditoria no relacionamento);
+ - prospectors (Prospectadores);
+ - recruiters (Recrutadores);
+ - perceivers (Perceptores);
+ - investigators (Investigadores);
+ - statisticians (Estátisticos);
+ - outhers (outros).
 
 
 
