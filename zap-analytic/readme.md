@@ -1,22 +1,29 @@
+
+### Commmon users 
+ - Parental Protection (Proteção de pais);
+ - Coaching Profissional (Profissionais de Coaching);
+ - Psychologists (Psicólogos);
+ - Relationship audit (auditoria no relacionamento);
+
+
+
 ### Description
 Software baseado em Nodejs, com objetivo acadêmico de construir uma leitura quantitativa das mensagens trocadas com outros usuarios do whatsapp. O objetivo é, aplicar aprendizado estatístico, relacionado com aprendizado de maquina para determinar um perfil de usuario, e um rating de usabilidade. ajudando a responder perguntas como:
 
-- Qual o melhor dia da semana para conversar com determinada pessoa?
-- Qual o melhor periodo da semana para conversar com determinada pessoa ?
-- Existe algum tipo de reciprocidade na conversa ?
+- ~~Qual o melhor dia da semana para conversar com determinada pessoa?~~ X
+- ~~Qual o melhor periodo da semana para conversar com determinada pessoa ?~~ X
+- Existe algum tipo de reciprocidade na conversa ? 
 - Quem é o maior interessado ?
 - Qual a taxa de aliciamento ? 
-- Qual o nível de interação na conversa?
+- Qual o nível de interação na conversa ?
 - Qual o perfil comportamental ? 
-- Quando começamos a conversar?
-- Quantos dias houveram conversas ?
+- ~~Quando começamos a conversar?~~ X
+- ~~Quantos dias houveram conversas ?~~ X
 - Em que fase do ano tem mais conversas ?
 - Qual é o assunto que mais conversa ?
 - Tem algum sinal de depressao ?
 - Quantidade de perguntas feitas por pessoa ?
 - Qual o nivel de intimidade ?
--
-
 
 
 Atualmente o zapanalytic faz a leitura e a limpeza de arquivos txt, exportados por uma conversa de whatsapp. A leitura fica responsavel por identificar cada linha como uma mensagem, sendo que cada mensagem contem uma data, hora, autor e texto. sendo a mensagem, texto e ou multimidia(audio, imagem e video).
@@ -57,7 +64,8 @@ O sistema é responsavel por efetuar a contagem  de mensagens por data, hora, au
 
 
 ## Methods to implements
-
+- Identificador e contador de perguntas na conversa de cada remetente da conversa;
+-  
 
 
 ### Extracts methods 
