@@ -12,13 +12,14 @@ Software baseado em Nodejs, com objetivo acadêmico de construir uma leitura qua
 
 - ~~Qual o melhor dia da semana para conversar com determinada pessoa?~~ X
 - ~~Qual o melhor periodo da semana para conversar com determinada pessoa ?~~ X
+- ~~Quando começamos a conversar?~~ X
+- ~~Quantos dias houveram conversas ?~~ X
+- ~~Existe algum dia da semana que nao há conversas ?~~ X
 - Existe algum tipo de reciprocidade na conversa ? 
 - Quem é o maior interessado ?
 - Qual a taxa de aliciamento ? 
 - Qual o nível de interação na conversa ?
 - Qual o perfil comportamental ? 
-- ~~Quando começamos a conversar?~~ X
-- ~~Quantos dias houveram conversas ?~~ X
 - Em que fase do ano tem mais conversas ?
 - Qual é o assunto que mais conversa ?
 - Tem algum sinal de depressao ?
@@ -44,7 +45,7 @@ O sistema é responsavel por efetuar a contagem  de mensagens por data, hora, au
     
 
 ### Commands
-    
+   ``` 
     ~ npm init 
     ~ npm install express
     ~ npm install consign 
@@ -55,7 +56,7 @@ O sistema é responsavel por efetuar a contagem  de mensagens por data, hora, au
     ~ npm install fs
 
     ~ npm install express consign multer handlebars express-handlebars moment fs
-
+  ```
 
 ## Init
     ~ node index.js
@@ -65,7 +66,8 @@ O sistema é responsavel por efetuar a contagem  de mensagens por data, hora, au
 
 ## Methods to implements
 - Identificador e contador de perguntas na conversa de cada remetente da conversa;
--  
+- Identificar tipos de reciprocidade existentes;
+- Comparar reciprocidade
 
 
 ### Extracts methods 
