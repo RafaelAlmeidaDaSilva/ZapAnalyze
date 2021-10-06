@@ -1,5 +1,6 @@
+# ZapAnalytic
 
-### Commmon users 
+## Commmon users 
  - Parental Protection (Proteção de pais);
  - Coaching Profissional (Profissionais de Coaching);
  - Psychologists (Psicólogos);
@@ -7,7 +8,7 @@
 
 
 
-### Description
+## Description
 Software baseado em Nodejs, com objetivo acadêmico de construir uma leitura quantitativa das mensagens trocadas com outros usuarios do whatsapp. O objetivo é, aplicar aprendizado estatístico, relacionado com aprendizado de maquina para determinar um perfil de usuario, e um rating de usabilidade. ajudando a responder perguntas como:
 
 - ~~Qual o melhor dia da semana para conversar com determinada pessoa?~~ X
@@ -35,23 +36,22 @@ O sistema é responsavel por efetuar a contagem  de mensagens por data, hora, au
 
 
 
-### Get Started
+## Get Started
 
     git clone https://github.com/RafaelAlmeidaDaSilva/ZapAnalyze.git
 
 
- ## Commands
+ ### Commands
 
     ~ npm install express consign multer handlebars express-handlebars moment fs
  
 
- ## Initiation
+ ### Initiation
     ~ node index.js
 
+## Project
 
-
-
-## Methods to implements
+### Methods to implements
 - Identificador e contador de perguntas na conversa de cada remetente da conversa;
 - Identificar tipos de reciprocidade existentes;
 - Comparar reciprocidade com base em um rating;
