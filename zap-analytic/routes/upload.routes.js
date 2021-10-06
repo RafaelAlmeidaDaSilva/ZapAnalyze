@@ -650,56 +650,7 @@ module.exports = app => {
 
                 identifySenders(Menssagens).forEach(element => {
                     media = mediaContext(contextos, element.nome);
-                   
-                   // A ---------------------------------
-                    
-                    function statusA(MM, MP, PC) {
-                        return   MM * ( MP / PC );
-                     }
-                     
-                     function scoreA(MM, MP, PC) {
-                        return   MM * ( (1/MP) / (1/PC) );
-                     }
-
-                   // B ---------------------------------
-                    
-                    // baseado na media harmonica
-                    function statusB(MM, MP, PC) {
-                        return   MM / ( MP / PC );
-                     }
-
-                    function scoreB(MM, MP, PC) {
-                        return   MM / ( (1/MP) / (1/PC) );
-                     }
-
-                   // C ---------------------------------
-                     
-                     //baseado na media ponderada
-                     function statusC(MM, MP, PC) {
-                        return   MM / ( MP * PC );
-                     }
-                     
-                     function scoreC(MM, MP, PC) {
-                        return   MM / ( (1/MP) * (1/PC) );
-                     }
-
-                   // D --------------------------------- 
-                    
-                     //baseado na media aritmética
-                    function statusD(MM, MP, PC) {
-                        return   MM / ( MP + PC );
-                    }
-                    function scoreD(MM, MP, PC) {
-                        return   MM / ( (1/MP) + (1/PC));
-                    }
-
-
-
-                    // tem outra formula mais precisa
-                    // queria estudar 
-                    var 
-                    var Vstatus = statusA(media,mediaWords(Menssagens, element.nome), mediaWordsContext(contextos, element.nome));
-                    var VScore = scoreA(media,mediaWords(Menssagens, element.nome), mediaWordsContext(contextos, element.nome));
+                  
                     var msgsRt={
                        nome: element.nome,
                        mediaMsgContexto: media,

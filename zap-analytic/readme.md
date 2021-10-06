@@ -1,5 +1,6 @@
 # ZapAnalytic 
 #### Analisador estatístico de mensagens do whatsapp.
+#### Baseado em NODEJS
 
 ### LICENSE
     Copyright (C) 2021 Rafael Almeida da Silva
