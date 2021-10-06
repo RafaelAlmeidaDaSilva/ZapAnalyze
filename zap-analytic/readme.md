@@ -1,4 +1,5 @@
-# ZapAnalytic
+# ZapAnalytic 
+#### Analisador estatístico de mensagens do whatsapp.
 
 ## Common users 
  - Parental Protection (Proteção de pais);
@@ -15,7 +16,7 @@
 
 
 ## Description
-Software baseado em Nodejs, com objetivo acadêmico de construir uma leitura quantitativa das mensagens trocadas com outros usuarios do whatsapp. O objetivo é, aplicar aprendizado estatístico, relacionado com aprendizado de maquina para determinar um perfil de usuario, e um rating de usabilidade. ajudando a responder perguntas como:
+Software baseado em Nodejs, com objetivo acadêmico de construir uma leitura quantitativa das mensagens trocadas com outros usuarios do whatsapp. O objetivo é, aplicar aprendizado estatístico, relacionado com aprendizado de maquina para determinar um perfil de usuario, e um rating de usabilidade. Ajudando a responder perguntas como:
 
 - ~~Qual o melhor dia da semana para conversar com determinada pessoa?~~ X
 - ~~Qual o melhor periodo da semana para conversar com determinada pessoa ?~~ X
@@ -34,11 +35,7 @@ Software baseado em Nodejs, com objetivo acadêmico de construir uma leitura qua
 - Qual o nivel de intimidade ?
 
 
-Atualmente o zapanalytic faz a leitura e a limpeza de arquivos txt, exportados por uma conversa de whatsapp. A leitura fica responsavel por identificar cada linha como uma mensagem, sendo que cada mensagem contem uma data, hora, autor e texto. sendo a mensagem, texto e ou multimidia(audio, imagem e video).
-
-O sistema é responsavel por efetuar a contagem  de mensagens por data, hora, autor, periodo, dia da semana, palavras, palavras por mensagem, palavras por contexto de mensagem. Execuntando tambem calculo de media e porcentagem de cada uma das contagens. 
-
-
+Atualmente, o zapanalytic faz a leitura e a limpeza de arquivos txt, exportados por uma conversa de whatsapp. A leitura fica responsavel, por identificar cada linha como uma mensagem, sendo que, cada mensagem contem uma data, hora, autor e texto. O sistema é responsavel por efetuar a contagem  de mensagens por data, hora, autor, periodo, dia da semana, palavras, palavras por mensagem, palavras por contexto de mensagem. Execuntando tambem calculo de media e porcentagem de cada uma das contagens. 
 
 
 
@@ -57,11 +54,12 @@ O sistema é responsavel por efetuar a contagem  de mensagens por data, hora, au
 
 ## Project
 
-### Methods to implements
+### To implements
 - Identificador e contador de perguntas na conversa de cada remetente da conversa;
 - Identificar tipos de reciprocidade existentes;
 - Comparar reciprocidade com base em um rating;
-- 
+- Ele deverá considerá uma mensagem como texto e ou multimidia(audio, imagem e video).
+
 
 
 ### Extracts methods 
