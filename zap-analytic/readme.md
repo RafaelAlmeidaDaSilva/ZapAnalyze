@@ -43,11 +43,11 @@ O sistema é responsavel por efetuar a contagem  de mensagens por data, hora, au
 
  ### Commands
 
-    ~ npm install express consign multer handlebars express-handlebars moment fs
+     npm install express consign multer handlebars express-handlebars moment fs
  
 
  ### Initiation
-    ~ node index.js
+     node index.js
 
 ## Project
 
