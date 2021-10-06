@@ -54,7 +54,7 @@ Atualmente, o zapanalytic faz a leitura e a limpeza de arquivos txt, exportados 
 
 ## Project
 
-### To implements
+### To implements (TASKS)
 - Identificador e contador de perguntas na conversa de cada remetente da conversa;
 - Identificar tipos de reciprocidade existentes;
 - Comparar reciprocidade com base em um rating;
