@@ -37,19 +37,15 @@ O sistema é responsavel por efetuar a contagem  de mensagens por data, hora, au
 
 ### Get Started
 
-    ~ git clone https://github.com/RafaelAlmeidaDaSilva/ZapAnalyze.git
+    git clone https://github.com/RafaelAlmeidaDaSilva/ZapAnalyze.git
 
-    Criar uma uma pasta com o nome de "uploads" na raiz do projeto se caso nao houver.
-    
-    Executar os comandos abaixo. ignorando o primeiro comando "npm init"
-    
 
-### Commands
+ ## Commands
 
     ~ npm install express consign multer handlebars express-handlebars moment fs
  
 
-## Init
+ ## Initiation
     ~ node index.js
 
 
