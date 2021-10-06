@@ -1,6 +1,6 @@
 # ZapAnalytic
 
-## Commmon users 
+## Common users 
  - Parental Protection (Proteção de pais);
  - Coaching Profissional (Profissionais de Coaching);
  - Psychologists (Psicólogos);
