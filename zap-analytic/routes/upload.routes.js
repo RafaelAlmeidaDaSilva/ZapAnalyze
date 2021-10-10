@@ -559,7 +559,7 @@ function porcent(max, x){
     return (x * 100) / max;
 }
 
-//------------------------------[novo]
+//------------------------------[velho]
 
 function contMenssagensRemetentes(msgsRemententes){
     var totalRemetentes=0;
@@ -593,6 +593,31 @@ function frequenciaRelativa(total, frequencia){
     
     return msgs;
  }
+
+
+function mediana (listValues)
+{  
+    for (let index = 0; index < listValues.length; index++) {
+        const element = listValues[index];
+        
+        if(!listValues[index + 1] >= element)
+            const elementList = listValues[index+1]
+            listValues[index+1] = element;
+            element = elementList;
+            
+
+        else  continue;//maior que o elemento
+
+           
+    }
+
+    return listValues[Math.round(listValues.length/2)];
+}
+
+
+
+
+
 
 //-------------------------------------------------------------------
 module.exports = app => {
@@ -655,8 +680,17 @@ module.exports = app => {
                        nome: element.nome,
                        mediaMsgContexto: media,
                        mediaPalavras: mediaWords(Menssagens, element.nome),
+                    //    desvio:
+                    //    mediana:
+                    //    moda:
                        mediaPalavrasContexto: mediaWordsContext(contextos, element.nome),
+                    //    desvio:
+                    //    mediana:
+                    //    moda:
                        msgsContexto: filterGeneric(contextos, element.nome),  
+                    //    desvio:
+                    //    mediana:
+                    //    moda:
                        mgsrt: filterGeneric(Menssagens,element.nome),
                        
                    };
