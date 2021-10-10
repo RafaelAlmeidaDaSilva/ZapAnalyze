@@ -594,7 +594,7 @@ function frequenciaRelativa(total, frequencia){
     return msgs;
  }
 
-
+// news
 function mediana (listValues)
 {  
     for (let index = 0; index < listValues.length; index++) {
@@ -614,11 +614,46 @@ function mediana (listValues)
     return listValues[Math.round(listValues.length/2)];
 }
 
+function moda (listValues){
+
+    //ja tem um anterior
+    //nao tem nenhum anterior
+    //return o valor que mais se repete na amostra
+}
 
 
+function Variancia(){
+
+}
+
+function DesvioPadrao(listValues, mediaValues) {
+    // subtrair a media do valor da lista 
+}
+
+function MediaHarmonicaPonderada (ListValuesPonderados)
+{
+
+    // mhp = w1+w2+...+wn / (w1/x1)+ (w2/x2)+...(wn/xn)
+
+}
+
+function CoeficientePearson(media,moda,mediana, desvio){
+    //As = 3*(media-mediana)/desvio
+}
 
 
+function DirectionCoeficientePearson (media, moda)
+{
+    // return (mediana - media) deixar sempre positivo
+}
 
+function statusCoeficientePearson(coeficiente)
+{
+    // assimetrica positiva
+    // assimetrica negativa
+    // simetrica
+
+}
 //-------------------------------------------------------------------
 module.exports = app => {
 
