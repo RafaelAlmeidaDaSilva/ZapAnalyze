@@ -594,7 +594,7 @@ function frequenciaRelativa(total, frequencia){
     return msgs;
  }
 
-// news
+// news ==========================================================
 function mediana (listValues)
 {  
     for (let index = 0; index < listValues.length; index++) {
@@ -615,43 +615,153 @@ function mediana (listValues)
 }
 
 function moda (listValues){
+    let frequencyList = null;
+    let conting = false;
+    for (let indexEx = 0; indexEx < listValues.length; indexEx++) {
+        if(frequencyList !== null){
+            for (let indexIn = 0; indexIn < frequencyList.length; indexIn++) {
+                if(frequencyList[indexIn].value == listValues[IndexEx])
+                {
+                    frequencyList[indexIn].cont ++;
+                    conting = true;
+                }
+            }
+           
+            //nao tem nenhum anterior
+            if (conting == false )
+            {
+                 frequencyList[indexEx] ={
+                     value :listValues[indexEx],
+                     cont: 1
+                 } ;
+                 
+            }
+            conting = false;
+         }   
 
-    //ja tem um anterior
-    //nao tem nenhum anterior
-    //return o valor que mais se repete na amostra
+       
+    }
+
+    for (let index = 0; index < frequencyList.length; index++) {
+        const element = frequencyList[index];
+        for (let index = 0; index < frequencyList.length; index++) {
+            const element = frequencyList[index].cont;
+            
+            if(index+1 < frequencyList.length)
+                if(element > frequencyList[index+1].cont )
+                {
+                    let lat = element;
+                    element = frequencyList[index+1].cont;
+                    frequencyList[index+1].cont = lat;
+                }else
+                    continue;
+
+        }
+    }
+
+    // retorna o ultimo valor da lista que é o valor que mais se repete.
+    return frequencyList[frequencyList.length-1];
+   
+
 }
 
 
-function Variancia(){
+function Variancia(listValues, mediaValues){
+    let diferenceList ;
+    let PotenceList;
+    let Acumulator ;
+    for (let index = 0; index < listValues.length; index++) {
+        const element = listValues[index];
+        if (listValues[index] >= mediaValues)
+            diferenceList[index] = listValues[index] - mediaValues;
+        else
+            diferenceList[index] = mediaValues - listValues[index];
+    }
 
+    for (let index = 0; index < diferenceList.length; index++) 
+        PotenceList[index] = diferenceList[index] * diferenceList[index];
+
+
+    for (let index = 0; index < PotenceList.length; index++) {
+        const Acumulator += PotenceList[index];
+        
+    
+    return Acumulator / PotenceList.length;
 }
+
+
+
 
 function DesvioPadrao(listValues, mediaValues) {
     // subtrair a media do valor da lista 
+    let diferenceList = null ;
+    let PotenceList = null;
+    let Acumulator = null;
+    for (let index = 0; index < listValues.length; index++) {
+        const element = listValues[index];
+        if (listValues[index] >= mediaValues)
+            diferenceList[index] = listValues[index] - mediaValues;
+        else
+            diferenceList[index] = mediaValues - listValues[index];
+    }
+
+    for (let index = 0; index < diferenceList.length; index++) 
+        PotenceList[index] = diferenceList[index] * diferenceList[index];
+
+
+    for (let index = 0; index < PotenceList.length; index++) {
+        const Acumulator += PotenceList[index];
+        
+    
+    return Math.sqrt(Acumulator / PotenceList.length);
 }
 
-function MediaHarmonicaPonderada (ListValuesPonderados)
-{
+function DesvioPadrao(variancia) {
+    // subtrair a media do valor da lista 
+    return Math.sqrt(variancia);
+}
 
+function MediaHarmonicaPonderada (ListValues,listWeights)
+{
+    let acumulatorDivisionValues = null ;
+    let acumulatorWeights = null;
+
+    for (let index = 0; index < listWeights.length; index++) 
+         acumulatorWeights += listWeights[index];
+        
+    
+    for (let index = 0; index < listValues.length; index++) {
+        acumulatorDivisionValues += listValues[index] / listWeights[index];
+        
+    }
     // mhp = w1+w2+...+wn / (w1/x1)+ (w2/x2)+...(wn/xn)
+    return acumulatorWeights / acumulatorDivisionValues;
 
 }
 
 function CoeficientePearson(media,moda,mediana, desvio){
-    //As = 3*(media-mediana)/desvio
+    return 3*(media -mediana) / desvio;
 }
 
 
 function DirectionCoeficientePearson (media, moda)
 {
-    // return (mediana - media) deixar sempre positivo
+    return media - moda;
 }
 
 function statusCoeficientePearson(coeficiente)
 {
     // assimetrica positiva
+    if(coeficiente > 0)
+        return "Alguma relação"
+
     // assimetrica negativa
+    if(coeficiente < 0)
+        return "Nenhuma relação"
+
     // simetrica
+    if(coeficiente == 0)
+        return "Alguma relação"
 
 }
 //-------------------------------------------------------------------
