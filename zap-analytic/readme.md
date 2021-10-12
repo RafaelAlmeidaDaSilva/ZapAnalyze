@@ -72,13 +72,6 @@ Atualmente, o zapanalytic faz a leitura e a limpeza de arquivos txt, exportados 
 
 ## Project
 
-### To implements (TASKS)
-- Identificador e contador de perguntas na conversa de cada remetente da conversa;
-- Identificar tipos de reciprocidade existentes;
-- Comparar reciprocidade com base em um rating;
-- Ele deverá considerá uma mensagem como texto e ou multimidia(audio, imagem e video).
-
-
 
 ### Extracts methods 
 Manual dos métodos do arquivo routes/upload.routes.js.

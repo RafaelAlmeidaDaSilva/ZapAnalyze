@@ -13,6 +13,7 @@
     <h2>Informações individuais</h2>
     <p><b>(RT)</b> - Nome do contato remetente </p>
     <p><b>(QM)</b> - Quantidade de mensagens enviadas </p>
+    <p><b>(QC)</b> - Quantidade de mensagens enviadas por contexto </p>
     <p><b>(MP)</b> - Média de palavras por mensagem. </p>
     <p><b>(MM)</b> - Média de mensagens em conjunto. </p>
     <p><b>(PC)</b> - Média de palavras por conjunto de mensagens </p>
@@ -23,7 +24,9 @@
                         <tr>
                         <th scope="col"> Contato (RT)</th>
                         <th scope="col">            </th>
-                        <th scope="col"> Quantidade (QM)</th>
+                        <th scope="col"> Mensagens (QM)</th>
+                        <th scope="col">            </th>
+                        <th scope="col"> Contextos (QC)</th>
                         <th scope="col">            </th>
                         <th scope="col"> Palavras (MP)</th>
                         <th scope="col">            </th>
@@ -40,6 +43,8 @@
                             <th scope="row">{{item.nome}}</th>
                             <td>             </td>
                             <td>{{item.mgsrt.length}}</td>
+                            <td>             </td>
+                             <td>{{item.qtdContexto}}</td>
                             <td>             </td>
                             <td>{{item.mediaPalavras}}</td>
                             <td>             </td>

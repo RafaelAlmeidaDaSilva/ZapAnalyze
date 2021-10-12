@@ -595,18 +595,27 @@ function frequenciaRelativa(total, frequencia){
  }
 
 // news ==========================================================
+
+
+
+
+// function contextoToListValues (Contextos)
+// {
+    
+// }
+
 function mediana (listValues)
-{  
+{  let elementList
     for (let index = 0; index < listValues.length; index++) {
         const element = listValues[index];
         
-        if(!listValues[index + 1] >= element)
-            const elementList = listValues[index+1]
+        if(!listValues[index + 1] >= element){
+            elementList = listValues[index+1]
             listValues[index+1] = element;
             element = elementList;
             
-
-        else  continue;//maior que o elemento
+        }
+        else continue;//maior que o elemento
 
            
     }
@@ -665,11 +674,10 @@ function moda (listValues){
 
 }
 
-
 function Variancia(listValues, mediaValues){
-    let diferenceList ;
-    let PotenceList;
-    let Acumulator ;
+    let diferenceList =null;
+    let PotenceList = null;
+    let Acumulator = null;
     for (let index = 0; index < listValues.length; index++) {
         const element = listValues[index];
         if (listValues[index] >= mediaValues)
@@ -682,8 +690,8 @@ function Variancia(listValues, mediaValues){
         PotenceList[index] = diferenceList[index] * diferenceList[index];
 
 
-    for (let index = 0; index < PotenceList.length; index++) {
-        const Acumulator += PotenceList[index];
+    for (let index = 0; index < PotenceList.length; index++) 
+        Acumulator += PotenceList[index];
         
     
     return Acumulator / PotenceList.length;
@@ -709,8 +717,8 @@ function DesvioPadrao(listValues, mediaValues) {
         PotenceList[index] = diferenceList[index] * diferenceList[index];
 
 
-    for (let index = 0; index < PotenceList.length; index++) {
-        const Acumulator += PotenceList[index];
+    for (let index = 0; index < PotenceList.length; index++) 
+       Acumulator += PotenceList[index];
         
     
     return Math.sqrt(Acumulator / PotenceList.length);
@@ -739,9 +747,16 @@ function MediaHarmonicaPonderada (ListValues,listWeights)
 
 }
 
-function CoeficientePearson(media,moda,mediana, desvio){
-    return 3*(media -mediana) / desvio;
+function CoeficientePearson(listValueA, listValueB, mediaA, mediaB, desvioA, desvioB){
+
+
+    
 }
+
+function CoeficienteCorrelecao(media, mediana, moda, desvio){
+    // return 3*(media - mediana) / desvio;
+}
+
 
 
 function DirectionCoeficientePearson (media, moda)
@@ -757,11 +772,11 @@ function statusCoeficientePearson(coeficiente)
 
     // assimetrica negativa
     if(coeficiente < 0)
-        return "Nenhuma relação"
+        return "Nenhuma relação" //
 
     // simetrica
     if(coeficiente == 0)
-        return "Alguma relação"
+        return "Neutro" // normal 
 
 }
 //-------------------------------------------------------------------
@@ -823,11 +838,13 @@ module.exports = app => {
                   
                     var msgsRt={
                        nome: element.nome,
+                       qtdContexto: contextos.length,
                        mediaMsgContexto: media,
                        mediaPalavras: mediaWords(Menssagens, element.nome),
                     //    desvio:
                     //    mediana:
                     //    moda:
+                    
                        mediaPalavrasContexto: mediaWordsContext(contextos, element.nome),
                     //    desvio:
                     //    mediana:
@@ -863,10 +880,10 @@ module.exports = app => {
                                     periodos: periodCont(Menssagens),
                                     distribFrequence: distribuicaoFrequencia(msgsRemententes),
                                     
+                                    
                                     });
             });
         
         
     });
-    
 }
