@@ -17,6 +17,9 @@
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 //-------------------------------------------------------------------
+
+
+
 const upload = require('../libs/config-upload');
 const readline = require('readline');
 const fs = require('fs');
@@ -24,7 +27,9 @@ const moment = require('moment');
 const { Console } = require('console');
 
 
-//-------------------------------------------------------------------
+
+//-------------------------[EXTRACTION INFORMATION METHODS]------------------------------------------
+
 function splitString(stringToSplit, separator) {
     var arrayOfStrings = stringToSplit.split(separator);
   
@@ -34,16 +39,16 @@ function splitString(stringToSplit, separator) {
     return arrayOfStrings;
 }
 
-function exist(array, dado){
+function exist(array, data){
     for(j= 0 ; j <= array.length-1; j++)
-        if(array[j].nome === dado)
+        if(array[j].nome === data)
             return true;
     return false;
 }   
 
-function filterGeneric (Menssagens, nome ){
-    let menssagens = Menssagens.filter((line) => {
-        return line.nome == nome;
+function filterGeneric (messages, name ){
+    let menssagens = messages.filter((line) => {
+        return line.nome == name;
     });
 
     return menssagens;
@@ -54,30 +59,28 @@ let options = {
     timeStyle: ('full' || 'long' || 'medium' || 'short' ), 
 }
 
-
-//-------------------------------------------------------------------
 function assignLine(line){
 
-    var dataHora = line.substring(0, 16);
-    var arraySlipString = dataHora.split(' ');
+    let dataHora = line.substring(0, 16);
+    let arraySlipString = dataHora.split(' ');
    
-    var ano, mes, dia, hora, min;
+    let ano, mes, dia, hora, min;
     dia = arraySlipString[0].split('/')[0];
     mes = parseInt(arraySlipString[0].split('/')[1])-1;
     ano = arraySlipString[0].split('/')[2];
     hora = arraySlipString[1].split(':')[0];
     min = arraySlipString[1].split(':')[1];
 
-    var dtMenssagem = new Date(ano,mes.toString(),dia,hora,min);
+    let dtMenssagem = new Date(ano,mes.toString(),dia,hora,min);
 
-     var remetenteMsg = lineDivision(line);
-     var position = firstCharPosition(remetenteMsg, ':');
+     let remetenteMsg = lineDivision(line);
+     let position = firstCharPosition(remetenteMsg, ':');
      
-     var rtMenssagem = remetenteMsg.substring(0,position);
+     let rtMenssagem = remetenteMsg.substring(0,position);
  
-     var txt = remetenteMsg.substring(position+2, remetenteMsg.length)
+     let txt = remetenteMsg.substring(position+2, remetenteMsg.length)
  
-     var mensagem = 
+     let mensagem = 
      {
          data: dtMenssagem,
          nome: rtMenssagem,
@@ -89,12 +92,12 @@ function assignLine(line){
 }
 
 function lineDivision(line){
-    var contatoMensagem = line.substring(19,line.length)
+    let contatoMensagem = line.substring(19,line.length)
     return contatoMensagem;
 }
 
 function firstCharPosition(line, char){
-    for(var i = 0; i < line.length-1 ; i++)
+    for(let i = 0; i < line.length-1 ; i++)
     {
         if(line.substring(i, i+1) == char)
          return i;
@@ -103,7 +106,7 @@ function firstCharPosition(line, char){
 }
 
 function lineBreak(line){
-    var remetenteMsg = lineDivision(line);
+    let remetenteMsg = lineDivision(line);
 
     if(line.substring(0, 19).split(' ')[0].substring(2,3) === '/')
     {
@@ -119,16 +122,22 @@ function lineBreak(line){
 
 }
 
-//-------------------------------------------------------------------
+function groupOrPrivate(senders){
+    if(senders.length > 2)
+        return true;
 
-var contarDC;
-function countDaysTalked(durationDias, dataInicio, Menssagens){
-    var  MensagensAgrupadasDias =[];
-    var  contDiasConversados = 0;
+    else
+        return false;
+}
+
+let contarDC;
+function countDaysTalked(durationDays, dateBeginning, messages){
+    let  MensagensAgrupadasDias =[];
+    let  contDiasConversados = 0;
     let  dataAtual, dataFinal, d;
 
-    for(i=0; i < durationDias ; i++){
-        dataAtual = dataInicio;
+    for(i=0; i < durationDays ; i++){
+        dataAtual = dateBeginning;
         d = moment(dataAtual);
         d.add(i, 'day'); 
         dataAtual = d.toDate();
@@ -136,11 +145,11 @@ function countDaysTalked(durationDias, dataInicio, Menssagens){
         dataFinal = d.toDate();
         dataFinal.setHours(23,59,0,0);
 
-        let objetosFiltrados = Menssagens.filter(result => {
+        let objetosFiltrados = messages.filter(result => {
             return result.data >= dataAtual  && result.data <= dataFinal;
            });
 
-      var analytic = {
+      let analytic = {
             dtinicio: dataAtual,
             dtfim: dataFinal,
             msgs: objetosFiltrados 
@@ -161,17 +170,17 @@ function countDaysTalked(durationDias, dataInicio, Menssagens){
     return MensagensAgrupadasDias;
 }
 
-function identifySenders(Menssagens){
-    var remetentes = []
+function identifySenders(messages){
+    let remetentes = []
 
     // percorrer por toda lista de menssagem 
-    for(i = 0 ; i <= Menssagens.length-1 ; i++){
+    for(let i = 0 ; i <= messages.length-1 ; i++){
        if (remetentes.length !== 0){
             
-            if(!exist(remetentes, Menssagens[i].nome))
+            if(!exist(remetentes, messages[i].nome))
             {
                 remetente= {
-                    nome: Menssagens[i].nome
+                    nome: messages[i].nome
                 }
                 remetentes.push(remetente);
             } 
@@ -180,7 +189,7 @@ function identifySenders(Menssagens){
        }
        else{
             remetente= {
-                nome: Menssagens[i].nome
+                nome: messages[i].nome
             }
             remetentes.push(remetente);
        }
@@ -191,36 +200,27 @@ function identifySenders(Menssagens){
     return remetentes;
 }
 
-
-function gruopOrPrivate(remetentes){
-    if(remetentes.length > 2)
-        return true;
-
-    else
-        return false;
-}
-
-function toGroupMenssageContext(Menssagens){
-    var antes = {};
-    var idContexto;
-    var contextos = [];
+function toGroupMessagesContexts(messages){
+    let antes = {};
+    let idContexto;
+    let contextos = [];
 
    
-        for(var i=0; i< Menssagens.length-1; i++)
+        for(let i=0; i< messages.length-1; i++)
         {
 
-            if(Menssagens[i].nome !== antes.nome )
+            if(messages[i].nome !== antes.nome )
             {
                 antes = {
-                    nome: Menssagens[i].nome,
+                    nome: messages[i].nome,
                     id: i
                 }
 
-                var msgs = [];
-                msgs.push(Menssagens[i]);
-                var contexto = {
+                let msgs = [];
+                msgs.push(messages[i]);
+                let contexto = {
                     msgs:msgs,
-                    nome: Menssagens[i].nome
+                    nome: messages[i].nome
                 }
                 
                 idContexto = contextos.push(contexto)-1;
@@ -228,7 +228,7 @@ function toGroupMenssageContext(Menssagens){
             }
             else{
 
-                contextos[idContexto].msgs.push(Menssagens[i]);
+                contextos[idContexto].msgs.push(messages[i]);
             }
         }
 
@@ -236,98 +236,82 @@ function toGroupMenssageContext(Menssagens){
       
 }
 
-function mediaContext (AgrupamentoContexto, remetente){
-    var ContextosRemetente =  filterGeneric(AgrupamentoContexto, remetente);
-    var N=0 , E=0;
+function meanContext (groupingContext, sender){
+    let ContextsSender =  filterGeneric(groupingContext, sender);
+    let N=0 , accumulator=0;
 
-    for(var i =0; i < ContextosRemetente.length-1; i++ )
+    for(let i =0; i < ContextsSender.length-1; i++ )
     {
-        E+= ContextosRemetente[i].msgs.length;
+        accumulator+= ContextsSender[i].msgs.length;
         N++;
     }
 
   
-    return E/N;
+    return arithmeticMean(accumulator,N);
 }
 
-function mediaWordsContext(contexto, nome){
-    var Epalavras=0, N=0, media=0;
-    var fi = [];
-    var mensagens = filterGeneric(contexto, nome);
+function meanWordsContext(contexts, name){
+    let accumulatorWords=0, N=0;
+    let frequency = [];
+    let messages = filterGeneric(contexts, name);
 
-    for(var i = 0; i<= mensagens.length-1; i++)
+    for(let i = 0; i<= messages.length-1; i++)
     {
-        Epalavras=0;
+        accumulatorWords=0;
         N=0;
-        media=0;
-        for(var j = 0; j<= contexto[i].msgs.length-1; j++)
+    
+        for(let j = 0; j<= contexts[i].msgs.length-1; j++)
         {
-            Epalavras += contexto[i].msgs[j].texto.split(' ').length;
+            accumulatorWords += contexts[i].msgs[j].texto.split(' ').length;
             N++;
         }
         
-        media = Epalavras/N;
-        fi.push(media);
+      
+        frequency.push(arithmeticMean(accumulatorWords,N));
     }
 
-    Epalavras=0;
+    accumulatorWords=0;
     N=0;
-    media=0;
 
-    for(var y= 0 ; y <= fi.length-1; y++)
+
+    for(let y= 0 ; y <= frequency.length-1; y++)
     {
-        Epalavras += fi[y];
+        accumulatorWords += frequency[y];
         N++;
     }
 
-    media = Epalavras/N;
-    return media;
+    return arithmeticMean(accumulatorWords,N);
 }
 
-function mediaWords(Mensagens, nome){
-    var Epalavras=0, N=0, media=0;
-    var mensagens = filterGeneric(Mensagens, nome);
-    for(var i = 0; i< mensagens.length-1 ; i++)
+function meanWordsForMessage(messages, name){
+    let accumulatorWords=0, N=0;
+    let mensagens = filterGeneric(messages, name);
+    for(let i = 0; i< mensagens.length-1 ; i++)
     {
-        Epalavras += splitString(mensagens[i].texto, ' ').length;
+        accumulatorWords += splitString(mensagens[i].texto, ' ').length;
         N++;
     }
-    media = Epalavras / N;
-    return media;
-}
-//-----------------------------------------------------
-function mediaLetter(){
-
+    
+    return arithmeticMean(accumulatorWords,N);
 }
 
-function mediaLetterMessage(){
-
-}
-
-function mediaLetterContextMessage(){
-
-}
-
-
-
-//------------------------------------------------------------
-function weekContDays(week, menssagens){
+function weekContDays(week, messages){
     
 
-    var fim = moment(menssagens[menssagens.length-1].data);
-    var inicio = moment(menssagens[0].data)
-    var duration =  moment.duration(fim.diff(inicio));
+    let fim = moment(messages[messages.length-1].data);
+    let inicio = moment(messages[0].data)
+    let duration =  moment.duration(fim.diff(inicio));
 
-    d = moment(menssagens[0].data);
+    d = moment(messages[0].data);
     
-    for(var i = 0 ; i <= duration.asDays(); i++){
-        var current = d;
+    for(let i = 0 ; i <= duration.asDays(); i++){
+        let current = d;
         current = moment(current.toDate().setHours(0,0,0,0));
         current.add(i, 'day'); 
-        var edit =  current.toDate();
-        var dataedit = edit.toLocaleDateString( 'pt-br', options);
-        var diaEdit = dataedit.split(' ')[0];
-        var dia = dataedit.split(' ')[0].substring(0,diaEdit.length-1);
+        let edit =  current.toDate();
+        let dataedit = edit.toLocaleDateString( 'pt-br', options);
+        let diaEdit = dataedit.split(' ')[0];
+        let dia = dataedit.split(' ')[0].substring(0,diaEdit.length-1);
 
         switch (dia) {
             case 'segunda-feira':
@@ -361,9 +345,9 @@ function weekContDays(week, menssagens){
    
 }
 
-function weekCont(Mensagem){
+function weekCont(message){
 
-    var data = [
+    let data = [
         {semana:'segunda',
          cont: 0,
          qtd: 0,
@@ -401,12 +385,12 @@ function weekCont(Mensagem){
          porcent: 0}
     ];
 
-    data = weekContDays(data, Mensagem);
+    data = weekContDays(data, message);
 
-    for(var i = 0; i <= Mensagem.length-1; i++){
+    for(let i = 0; i <= message.length-1; i++){
         
-        var dataedit = Mensagem[i].data.toLocaleDateString( 'pt-br', options);
-        var diaEdit = dataedit.split(' ')[0];
+        let dataedit = message[i].data.toLocaleDateString( 'pt-br', options);
+        let diaEdit = dataedit.split(' ')[0];
         var dia = dataedit.split(' ')[0].substring(0,diaEdit.length-1);
         
         switch (dia) {
@@ -437,14 +421,12 @@ function weekCont(Mensagem){
           }
           
     }
-    return mediaCont(data);
+    return meanCont(data);
 }
 
+function periodCont(message){
 
-//------------------------------------------------------------
-function periodCont(mensagem){
-
-    period =[
+   let period =[
         {periodo:'manha',
          cont:0,
          qtd:0,
@@ -467,10 +449,10 @@ function periodCont(mensagem){
          porcent: 0}
     ];
 
-    period = periodContHours(period,mensagem);
+    period = periodContHours(period,message);
 
-    for(var i= 0; i <= mensagem.length-1 ; i++){
-        var periodo = getPeriodWithHours(mensagem[i].data.getHours())
+    for(let i= 0; i <= message.length-1 ; i++){
+        let periodo = getPeriodWithHours(message[i].data.getHours())
         switch (periodo) {
             case 'manha':
                 period[0].cont++;
@@ -490,34 +472,34 @@ function periodCont(mensagem){
           }
 
     }
-    return mediaCont(period);
+    return meanCont(period);
 }
 
-function getPeriodWithHours(hora){
+function getPeriodWithHours(hour){
     
-    if(hora >= 6 && hora <= 11)
+    if(hour >= 6 && hour <= 11)
         return 'manha'
-    if(hora >= 12 && hora <= 17)
+    if(hour >= 12 && hour <= 17)
         return 'tarde'
-    if(hora >= 18 && hora <= 23)
+    if(hour >= 18 && hour <= 23)
         return 'noite'
-    if(hora >= 0 && hora <= 5)
+    if(hour >= 0 && hour <= 5)
         return 'madrugada'
 }
 
-function periodContHours(period, mensagens){
+function periodContHours(period, messages){
     
-    var fim = moment(mensagens[mensagens.length-1].data);
-    var inicio = moment(mensagens[0].data)
-    var duration =  moment.duration(fim.diff(inicio));
+    let fim = moment(messages[messages.length-1].data);
+    let inicio = moment(messages[0].data)
+    let duration =  moment.duration(fim.diff(inicio));
 
-    d = moment(mensagens[0].data);
+    d = moment(messages[0].data);
     
-    for(var i = 0 ; i <= duration.asHours(); i++){
-        var current = d;
+    for(let i = 0 ; i <= duration.asHours(); i++){
+        let current = d;
         current = moment(current.toDate().setHours(0,0,0,0));
         current.add(i, 'hours'); 
-        var hora = getPeriodWithHours(current.toDate().getHours())
+        let hora = getPeriodWithHours(current.toDate().getHours())
        
         switch (hora) {
             case 'manha':
@@ -543,54 +525,45 @@ function periodContHours(period, mensagens){
 
 
 
-//-------------------------------------------------------------------
-function mediaCont(distribuicao){
-   
-    for(var i =0 ; i <= distribuicao.length-1; i++)
-        distribuicao[i].media = distribuicao[i].cont / distribuicao[i].qtd
+//---------------------------------[STATISTIC METHODS]-------------------------------------------
 
-   return mediaPorcent(distribuicao);     
-}
- 
-function mediaPorcent(distribuicao){
-    var max = 0;
-    for(var i =0 ; i <= distribuicao.length-1; i++)
-        max += distribuicao[i].media;
 
-    for(var i = 0; i <= distribuicao.length-1; i++)
-        distribuicao[i].porcent = porcent(max, distribuicao[i].media);
+function meanContDistribution (distribution){
+    let max = 0;
+    for(let i =0 ; i <= distribution.length-1; i++){
+        distribution[i].media = distribution[i].cont / distribution[i].qtd
+        max += distribution[i].media;  
+        distribution[i].porcent = percentage(max, distribution[i].media);    
+    }
 
-    return distribuicao;
+   return distribution;    
 }
 
-
-function porcent(max, x){
+function percentage(max, x){
     return (x * 100) / max;
 }
 
-//------------------------------[velho]
-
-function contMenssagensRemetentes(msgsRemententes){
-    var totalRemetentes=0;
-    msgsRemententes.forEach(item=> {
+function messageCounterBySender(messagesOfSender){
+    let totalRemetentes=0;
+    messagesOfSender.forEach(item=> {
         totalRemetentes +=  item.mgsrt.length;
     });
     
     return totalRemetentes;
 } 
 
-function frequenciaRelativa(total, frequencia){
+function relativeFrequency(total, frequencia){
     return (frequencia / total)*100; 
  }
 
- function distribuicaoFrequencia (msgsRemententes){
-    var totalRemetentes = 0; 
-    var freqRelativa = 0;
-    var msgs = []; 
+function frequencyDistribution (messagesOfSender){
+    let totalRemetentes = 0; 
+    let freqRelativa = 0;
+    let msgs = []; 
 
-    msgsRemententes.forEach(item => {
-        totalRemetentes = contMenssagensRemetentes(msgsRemententes);
-        freqRelativa = frequenciaRelativa(totalRemetentes, item.mgsrt.length);
+    messagesOfSender.forEach(item => {
+        totalRemetentes = messageCounterBySender(messagesOfSender);
+        freqRelativa = relativeFrequency(totalRemetentes, item.mgsrt.length);
         mg = {
             element: item,
             frel: freqRelativa,
@@ -603,17 +576,15 @@ function frequenciaRelativa(total, frequencia){
     return msgs;
  }
 
-// news ==========================================================
+function contextToListValues (contexts)
+{   let listValues = null ;
+    for (let index = 0; index < contexts.length; index++) 
+        listvalues[index]= contexts[index].length;
+        
+    return listValues;
+}
 
-
-
-
-// function contextoToListValues (Contextos)
-// {
-    
-// }
-
-function mediana (listValues)
+function median (listValues)
 {  let elementList
     for (let index = 0; index < listValues.length; index++) {
         const element = listValues[index];
@@ -632,7 +603,7 @@ function mediana (listValues)
     return listValues[Math.round(listValues.length/2)];
 }
 
-function moda (listValues){
+function mode (listValues){
     let frequencyList = null;
     let conting = false;
     for (let indexEx = 0; indexEx < listValues.length; indexEx++) {
@@ -643,7 +614,7 @@ function moda (listValues){
                     frequencyList[indexIn].cont ++;
                     conting = true;
                 }
-            ]   
+               
                 //nao tem nenhum anterior
                 if (conting == false )
                 {
@@ -685,16 +656,16 @@ function moda (listValues){
 
 }
 
-function Variancia(listValues, mediaValues){
+function variance(listValues, meanValues){
     let diferenceList =null;
     let PotenceList = null;
     let Acumulator = null;
     for (let index = 0; index < listValues.length; index++) {
         const element = listValues[index];
-        if (listValues[index] >= mediaValues)
-            diferenceList[index] = listValues[index] - mediaValues;
+        if (listValues[index] >= meanValues)
+            diferenceList[index] = listValues[index] - meanValues;
         else
-            diferenceList[index] = mediaValues - listValues[index];
+            diferenceList[index] = meanValues - listValues[index];
     }
 
     for (let index = 0; index < diferenceList.length; index++) 
@@ -708,17 +679,17 @@ function Variancia(listValues, mediaValues){
     return Acumulator / PotenceList.length;
 }
 
-function DesvioPadrao(listValues, mediaValues) {
+function standardDeviation(listValues, meanValues) {
     // subtrair a media do valor da lista 
     let diferenceList = null ;
     let PotenceList = null;
     let Acumulator = null;
     for (let index = 0; index < listValues.length; index++) {
         const element = listValues[index];
-        if (listValues[index] >= mediaValues)
-            diferenceList[index] = listValues[index] - mediaValues;
+        if (listValues[index] >= meanValues)
+            diferenceList[index] = listValues[index] - meanValues;
         else
-            diferenceList[index] = mediaValues - listValues[index];
+            diferenceList[index] = meanValues - listValues[index];
     }
 
     for (let index = 0; index < diferenceList.length; index++) 
@@ -732,12 +703,16 @@ function DesvioPadrao(listValues, mediaValues) {
     return Math.sqrt(Acumulator / PotenceList.length);
 }
 
-function DesvioPadrao(variancia) {
+function standardDeviation(variance) {
     // subtrair a media do valor da lista 
-    return Math.sqrt(variancia);
+    return Math.sqrt(variance);
 }
 
-function MediaHarmonicaPonderada (ListValues,listWeights)
+function arithmeticMean (accumulator, n){
+    return accumulator / n;
+}
+
+function weightedHarmonicMean (ListValues,listWeights)
 {
     let acumulatorDivisionValues = null ;
     let acumulatorWeights = null;
@@ -755,7 +730,7 @@ function MediaHarmonicaPonderada (ListValues,listWeights)
 
 }
 
-function CoeficientePearson(ListVars){
+function coeficientePearson(ListVars){
 
     let vars = null;
     for (let index = 0; index < ListVars.length; index++) {
@@ -766,36 +741,46 @@ function CoeficientePearson(ListVars){
     
 }
 
-function CoeficienteCorrelecao(media, mediana, moda, desvio){
-        // return 3*(media - mediana) / desvio;
+function asymmetryCoefficient(mean, median, deviation){
+        return 3*(mean - median) / deviation;
 }
 
-function DirectionCoeficientePearson (media, moda)
+function directionCoefficient (mean, mode)
 {
-    return media - moda;
+    return mean - mode;
 }
 
-function statusCoeficientePearson(coeficiente)
+function statusCoefficient(coefficient)
 {
     // assimetrica positiva
-    if(coeficiente > 0)
+    if(coefficient > 0)
         return "Alguma relação"
 
     // assimetrica negativa
-    if(coeficiente < 0)
+    if(coefficient < 0)
         return "Nenhuma relação" //
 
     // simetrica
-    if(coeficiente == 0)
+    if(coefficient == 0)
         return "Neutro" // normal 
 
 }
 
+
+
+//-------------------------------------[BUSINESS RULES METHODS]-------------------------------
+
+// Implements Incompleted
+
 function reciprocityCalculate(){}
 
+function recprocitySenibilityCalculate(){}
 
 
-//-------------------------------------------------------------------
+
+
+
+
 module.exports = app => {
 
     app.get('/', function(req,res){
@@ -803,8 +788,8 @@ module.exports = app => {
     });
     
     app.post('/upload',upload.single("backup"), (req, res) =>{
-            var Menssagens= [];
-            var sujeiras= [];
+            let Messages= [];
+            let sujeiras= [];
 
             const rl = readline.createInterface({
                 input: fs.createReadStream('./uploads/file.txt')
@@ -814,9 +799,9 @@ module.exports = app => {
                 
                 if(!lineBreak(line))
                 {
-                    if(Menssagens.length !== 0){
+                    if(Messages.length !== 0){
                         var space = ' ';
-                        Menssagens[Menssagens.length-1].texto = Menssagens[Menssagens.length-1].texto.concat(space.concat(splitString(line, ' ').join(' ')));
+                        Messages[Messages.length-1].texto = Messages[Messages.length-1].texto.concat(space.concat(splitString(line, ' ').join(' ')));
                     }
                     else{
                         // armazena como sujeira no documento 
@@ -827,74 +812,101 @@ module.exports = app => {
                         // deleta a linha 
                     }
                 }else{
-                    Menssagens.push(assignLine(line));
+                    Messages.push(assignLine(line));
                 }     
             });
             rl.on('close', () => {
                 
                 fs.unlinkSync("./uploads/file.txt"); 
-               
-          
-           
-                var fim = moment(Menssagens[Menssagens.length-1].data);
-                var inicio = moment(Menssagens[0].data)
-                var duration =  moment.duration(fim.diff(inicio));
-                
-                var  MensagensAgrupadasDias =[];
-                 
-                MensagensAgrupadasDias = countDaysTalked(duration.asDays(), inicio.toDate(), Menssagens);
-                var msgsRemententes = [];
-              
-                var media;
-                var contextos = toGroupMenssageContext(Menssagens);
-                var dados=[];
+                let MessagesOfDays =[];
+                let FrequencyInfosMean = [];
+                let DispersionSenders = [];
+                let Context = toGroupMessagesContexts(Messages);
+                let end = moment(Messages[Messages.length-1].data);
+                let beginning = moment(Messages[0].data)
+                let duration =  moment.duration(end.diff(beginning));
+                MessagesOfDays = countDaysTalked(duration.asDays(), beginning.toDate(), Messages);
+                let days = Math.trunc(duration.asDays());
+                let hours = Math.trunc(((duration.asDays() - Math.trunc(duration.asDays()))*24));
+                let minutes = Math.trunc((((duration.asDays() - Math.trunc(duration.asDays()))*24) - Math.trunc((duration.asDays() - Math.trunc(duration.asDays()))*24)) * 60);
 
-                identifySenders(Menssagens).forEach(element => {
-                    media = mediaContext(contextos, element.nome);
+            
+
+                identifySenders(Messages).forEach(element => {
                   
-                    var msgsRt={
+                    let FrequencyInfoMeanSenders={
                        nome: element.nome,
-                       qtdContexto: contextos.length,
-                       mediaMsgContexto: media,
-                       mediaPalavras: mediaWords(Menssagens, element.nome),
-                    //    desvio:
-                    //    mediana:
-                    //    moda:
+                       qtdContexto: context.length,
+                       mediaMsgContexto: meanContext(context, element.nome),
+                       mediaPalavras: meanWordsForMessage(Messages, element.nome),
                     
-                       mediaPalavrasContexto: mediaWordsContext(contextos, element.nome),
-                    //    desvio:
-                    //    mediana:
-                    //    moda:
-                       msgsContexto: filterGeneric(contextos, element.nome),  
-                    //    desvio:
-                    //    mediana:
-                    //    moda:
-                       mgsrt: filterGeneric(Menssagens,element.nome),
+                       mediaPalavrasContexto: meanWordsContext(context, element.nome),
+            
+                       msgsContexto: filterGeneric(context, element.nome),  
+        
+                       mgsrt: filterGeneric(Messages,element.nome),
                        
                    };
+
+                //    let DispersionSenders = {
+                //        name : element.nome,
+                //        dispersionVariables :[{variable: "Messages", 
+                //                               media:,
+                //                               mediana: ,
+                //                               moda: ,
+                //                               variancia: ,
+                //                               desvio: ,
+                //                               coAssimetria: ,
+                //                               statusAssimetria: },
+                                              
+                //                               {variable: "Words", 
+                //                               media: mediaWords(Messages, element.nome),
+                //                               mediana: ,
+                //                               moda: ,
+                //                               variancia: ,
+                //                               desvio: ,
+                //                               coAssimetria: ,
+                //                               statusAssimetria: },
+                                              
+                //                               {variable: "Context", 
+                //                               media: mediaContext(context, element.nome),
+                //                               mediana: ,
+                //                               moda: ,
+                //                               variancia: ,
+                //                               desvio: ,
+                //                               coAssimetria: ,
+                //                               statusAssimetria: }]
+                //    }
                    
-                   msgsRemententes.push(msgsRt); 
+                   FrequencyInfosMean.push(FrequencyInfoMeanSenders); 
                    
                    
                 });
-               
-               
-               
-                var dias = Math.trunc(duration.asDays());
-                var horas = Math.trunc(((duration.asDays() - Math.trunc(duration.asDays()))*24));
-                var minutos = Math.trunc((((duration.asDays() - Math.trunc(duration.asDays()))*24) - Math.trunc((duration.asDays() - Math.trunc(duration.asDays()))*24)) * 60);
 
-                res.render('home', {totalmsg:Menssagens.length, 
-                                    dtinicio: Menssagens[0].data.toLocaleDateString( 'pt-br', options),
-                                    dtfim: Menssagens[Menssagens.length-1].data.toLocaleDateString( 'pt-br', options),
-                                    msgsRemetentes: msgsRemententes,
-                                    dias: dias,
-                                    horasDias: horas,
-                                    minutosHoras: minutos,
+                identifySenders(Messages).forEach(element => {
+
+                });
+
+
+               
+
+               
+
+
+                          
+           
+           
+                res.render('home', {totalmsg:Messages.length, 
+                                    dtinicio: Messages[0].data.toLocaleDateString( 'pt-br', options),
+                                    dtfim: Messages[Messages.length-1].data.toLocaleDateString( 'pt-br', options),
+                                    msgsRemetentes: FrequencyInfosMean,
+                                    dias: days,
+                                    horasDias: hours,
+                                    minutosHoras: minutes,
                                     convDias: contarDC,
-                                    week: weekCont(Menssagens),
-                                    periodos: periodCont(Menssagens),
-                                    distribFrequence: distribuicaoFrequencia(msgsRemententes),
+                                    week: weekCont(Messages),
+                                    periodos: periodCont(Messages),
+                                    distribFrequence: frequencyDistribution(FrequencyInfosMean),
                                     
                                     
                                     });
