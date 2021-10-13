@@ -72,6 +72,38 @@ Atualmente, o zapanalytic faz a leitura e a limpeza de arquivos txt, exportados 
 
 ## Project
 
+### Estatisic methods
+
+    function mediaCont(distribuicao)
+    
+    function mediaPorcent(distribuicao)
+
+    function porcent(max, x)
+
+    function frequenciaRelativa(total, frequencia);
+
+    function distribuicaoFrequencia (msgsRemententes);
+
+    function mediana (listValues);
+
+    function moda (listValues);
+
+    function Variancia(listValues, mediaValues);
+
+    function DesvioPadrao(listValues, mediaValues) ;
+
+    function DesvioPadrao(variancia);
+
+    function MediaHarmonicaPonderada (ListValues,listWeights);
+    
+    function CoeficientePearson(listValueA, listValueB, mediaA, mediaB, desvioA, desvioB);
+
+    function CoeficienteCorrelecao(media, mediana, moda, desvio);
+  
+    function DirectionCoeficientePearson (media, moda);
+    
+    function statusCoeficientePearson(coeficiente).
+    
 
 ### Extracts methods 
 Manual dos métodos do arquivo routes/upload.routes.js.

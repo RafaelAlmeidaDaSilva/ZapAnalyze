@@ -191,6 +191,15 @@ function identifySenders(Menssagens){
     return remetentes;
 }
 
+
+function gruopOrPrivate(remetentes){
+    if(remetentes.length > 2)
+        return true;
+
+    else
+        return false;
+}
+
 function toGroupMenssageContext(Menssagens){
     var antes = {};
     var idContexto;
@@ -634,18 +643,20 @@ function moda (listValues){
                     frequencyList[indexIn].cont ++;
                     conting = true;
                 }
-            }
-           
-            //nao tem nenhum anterior
-            if (conting == false )
-            {
-                 frequencyList[indexEx] ={
-                     value :listValues[indexEx],
-                     cont: 1
-                 } ;
-                 
-            }
-            conting = false;
+            ]   
+                //nao tem nenhum anterior
+                if (conting == false )
+                {
+                    frequencyList[indexEx] ={
+                        value :listValues[indexEx],
+                        cont: 1
+                    } ;
+                    
+                }
+                conting = false;
+             }
+            
+            
          }   
 
        
@@ -697,9 +708,6 @@ function Variancia(listValues, mediaValues){
     return Acumulator / PotenceList.length;
 }
 
-
-
-
 function DesvioPadrao(listValues, mediaValues) {
     // subtrair a media do valor da lista 
     let diferenceList = null ;
@@ -747,17 +755,20 @@ function MediaHarmonicaPonderada (ListValues,listWeights)
 
 }
 
-function CoeficientePearson(listValueA, listValueB, mediaA, mediaB, desvioA, desvioB){
+function CoeficientePearson(ListVars){
 
+    let vars = null;
+    for (let index = 0; index < ListVars.length; index++) {
+        const element = ListVars[index];
 
+        
+    }
     
 }
 
 function CoeficienteCorrelecao(media, mediana, moda, desvio){
-    // return 3*(media - mediana) / desvio;
+        // return 3*(media - mediana) / desvio;
 }
-
-
 
 function DirectionCoeficientePearson (media, moda)
 {
@@ -779,6 +790,11 @@ function statusCoeficientePearson(coeficiente)
         return "Neutro" // normal 
 
 }
+
+function reciprocityCalculate(){}
+
+
+
 //-------------------------------------------------------------------
 module.exports = app => {
 
