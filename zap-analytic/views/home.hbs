@@ -56,7 +56,10 @@
             </tbody>
     </table>
     <br>
-   {{!-- <table class="table">
+   <table class="table">
+        {{#each dispercions as |item| }}
+            <h3>remetente: {{item.name}}</h3>
+               
                     <thead class="thead-dark">
                         <tr>
                         <th scope="col"> Variavel (Var)</th>
@@ -67,35 +70,33 @@
                         <th scope="col">            </th>
                         <th scope="col"> Media </th>
                         <th scope="col">            </th>
-                        <th scope="col"> Mediana </th>
-                        <th scope="col">            </th>
-                        <th scope="col"> Moda </th>
-                        <th scope="col">            </th>
                         <th scope="col"> Assimetria </th>
                         <th scope="col">            </th>
-                        <th scope="col"> Status Assimetria </th>
+                        <th scope="col"> Assimetria Força </th>
                       
 
                         </tr>
                     </thead>
                     <tbody>
-                    {{#each msgsRemetentes as |item| }}
+                    {{#each dispercions.dispersionVariables as |var| }}
                         <tr>
-                            <th scope="row">{{item.nome}}</th>
+                
+                            <td>{{var.variable}}</td>
                             <td>             </td>
-                            <td>{{item.mgsrt.length}}</td>
+                             <td>{{var.variance}}</td>
                             <td>             </td>
-                             <td>{{item.qtdContexto}}</td>
+                            <td>{{var.deviation}}</td>
                             <td>             </td>
-                            <td>{{item.mediaPalavras}}</td>
+                            <td>{{var.mean}}</td>
                             <td>             </td>
-                            <td>{{item.mediaMsgContexto}}</td>
+                            <td>{{var.asymmetry}}</td>
                             <td>             </td>
-                            <td>{{item.mediaPalavrasContexto}}</td>
+                            <td>{{var.forceAsymmetry}}</td>
                             <td>             </td>
                     {{/each}}
             </tbody>
-    </table> --}}
+        {{/each}}
+    </table>
 
 
      <br>
