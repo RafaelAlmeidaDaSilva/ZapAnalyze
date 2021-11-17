@@ -421,7 +421,7 @@ function weekCont(message){
           }
           
     }
-    return meanContDistribution(data);
+    return meanCount(data);
 }
 
 function periodCont(message){
@@ -472,7 +472,7 @@ function periodCont(message){
           }
 
     }
-    return meanContDistribution(period);
+    return meanCount(period);
 }
 
 function getPeriodWithHours(hour){
@@ -535,16 +535,24 @@ function countWordsForMessage (message)
 
 //---------------------------------[STATISTIC METHODS]-------------------------------------------
 
+function meanCount(distribuicao){
+   
+    for(var i =0 ; i <= distribuicao.length-1; i++)
+        distribuicao[i].media = distribuicao[i].cont / distribuicao[i].qtd
+
+   return meanContDistribution(distribuicao);     
+}
 
 function meanContDistribution (distribution){
-    let max = 0;
-    for(let i =0 ; i <= distribution.length-1; i++){
-        distribution[i].media = distribution[i].cont / distribution[i].qtd
-        max += distribution[i].media;  
-        distribution[i].porcent = percentage(max, distribution[i].media);    
-    }
+    var max = 0;
+    for(var i =0 ; i <= distribution.length-1; i++)
+        max += distribution[i].media;
 
-   return distribution;    
+    for(var i = 0; i <= distribution.length-1; i++)
+        distribution[i].porcent = percentage(max, distribution[i].media);
+
+    return distribution;
+
 }
 
 function percentage(max, x){
@@ -821,6 +829,24 @@ function forceAsymmetry(coefficient)
 function MessagesSebilitty(){}
 function WordSebilitty(){}
 function ContextSebilitty(){}
+
+function assignSebility(sender, variable, variance, deviation, mean, asymmetry, force)
+{
+    switch (variable) {
+        case "Messages":
+            
+            break;
+        case "Words":
+            
+            break;
+        case "Context":
+            
+            break;
+    
+        default:
+            break;
+    }
+}
 
 
 module.exports = app => {
