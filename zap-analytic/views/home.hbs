@@ -57,33 +57,36 @@
     </table>
     <br>
    <table class="table">
-        {{#each dispercions as |item| }}
-            <h3>remetente: {{item.name}}</h3>
-               
-                    <thead class="thead-dark">
-                        <tr>
-                        <th scope="col"> Variavel (Var)</th>
-                        <th scope="col">            </th>
-                        <th scope="col"> Variância </th>
-                        <th scope="col">            </th>
-                        <th scope="col"> Desvio Padrão</th>
-                        <th scope="col">            </th>
-                        <th scope="col"> Media </th>
-                        <th scope="col">            </th>
-                        <th scope="col"> Assimetria </th>
-                        <th scope="col">            </th>
-                        <th scope="col"> Assimetria Força </th>
-                      
+            <thead class="thead-dark">
+                            <tr>
+                            <th scope="col"> Remetente (RT)</th>
+                            <th scope="col">            </th>
+                            <th scope="col"> Variavel (Var)</th>
+                            <th scope="col">            </th>
+                            <th scope="col"> Variância </th>
+                            <th scope="col">            </th>
+                            <th scope="col"> Desvio Padrão</th>
+                            <th scope="col">            </th>
+                            <th scope="col"> Media </th>
+                            <th scope="col">            </th>
+                            <th scope="col"> Assimetria </th>
+                            <th scope="col">            </th>
+                            <th scope="col"> Força de Assimetria  </th>
+                        
 
-                        </tr>
-                    </thead>
+                            </tr>
+              </thead>
+          
                     <tbody>
-                    {{#each dispercions.dispersionVariables as |var| }}
+              {{#each dispercions as |item| }}
+                    {{#each item.dispersionVariables as |var| }}
                         <tr>
-                
+                            
+                            <td>{{item.name}}</td>
+                            <td>             </td>
                             <td>{{var.variable}}</td>
                             <td>             </td>
-                             <td>{{var.variance}}</td>
+                            <td>{{var.variance}}</td>
                             <td>             </td>
                             <td>{{var.deviation}}</td>
                             <td>             </td>
@@ -94,8 +97,9 @@
                             <td>{{var.forceAsymmetry}}</td>
                             <td>             </td>
                     {{/each}}
+                {{/each}}      
             </tbody>
-        {{/each}}
+      
     </table>
 
 

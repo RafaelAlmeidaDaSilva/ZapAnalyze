@@ -31,7 +31,7 @@ const { Console } = require('console');
 //-------------------------[EXTRACTION INFORMATION METHODS]------------------------------------------
 
 function splitString(stringToSplit, separator) {
-    var arrayOfStrings = stringToSplit.split(separator);
+    var arrayOfStrings = stringToSplit.toString().split(separator);
   
     // console.log('Linha: "' + stringToSplit + '"');
     // console.log('O array tem ' + arrayOfStrings.length + ' elementos: ' + arrayOfStrings.join(' / '));
@@ -421,7 +421,7 @@ function weekCont(message){
           }
           
     }
-    return meanCont(data);
+    return meanContDistribution(data);
 }
 
 function periodCont(message){
@@ -472,7 +472,7 @@ function periodCont(message){
           }
 
     }
-    return meanCont(period);
+    return meanContDistribution(period);
 }
 
 function getPeriodWithHours(hour){
@@ -585,9 +585,9 @@ function frequencyDistribution (messagesOfSender){
  }
 
 function contextToListValues (contexts)
-{   let listValues = null ;
+{   let listValues = [];
     for (let index = 0; index < contexts.length; index++) 
-        listvalues[index]= contexts[index].length;
+        listValues[index]= contexts[index].length;
         
     return listValues;
 }
@@ -598,7 +598,7 @@ function messagesForDayToListValues(messagesForDay)
     let listValues = [];
 
     for (let index = 0; index < messagesForDay.length; index++) 
-        listValues[index].push(messagesForDay[index].msgs.length);
+        listValues[index] = messagesForDay[index].msgs.length;
 
     
     return listValues;
@@ -617,7 +617,7 @@ function WordsForMessageToListValues(messages){
 function median (listValues)
 {  let elementList
     for (let index = 0; index < listValues.length; index++) {
-        const element = listValues[index];
+        let element = listValues[index];
         
         if(!listValues[index + 1] >= element){
             elementList = listValues[index+1]
@@ -687,14 +687,15 @@ function mode (listValues){
 }
 
 function variance(listValues, meanValues){
-    let diferenceList =null;
-    let PotenceList = null;
-    let Acumulator = null;
+    let diferenceList = [];
+    let PotenceList = [];
+    let Acumulator = 0;
     for (let index = 0; index < listValues.length; index++) {
-        const element = listValues[index];
+        
         if (listValues[index] >= meanValues)
             diferenceList[index] = listValues[index] - meanValues;
-        else
+       
+        if(listValues[index] < meanValues)
             diferenceList[index] = meanValues - listValues[index];
     }
 
@@ -807,17 +808,19 @@ function forceAsymmetry(coefficient)
 
 //-------------------------------------[BUSINESS RULES METHODS]-------------------------------
 
-// Implements 
+// // Implements 
 
-function reciprocityCalculate(){}
+// function reciprocityCalculate(){}
 
-// implements
+// // implements
 
-function recprocitySenibilityCalculate(){}
-
-
+// function recprocitySenibilityCalculate(){}
 
 
+
+function MessagesSebilitty(){}
+function WordSebilitty(){}
+function ContextSebilitty(){}
 
 
 module.exports = app => {
@@ -860,7 +863,7 @@ module.exports = app => {
                 let messagesOfDays =[];
                 let FrequencyInfosMean = [];
                 let DispersionSenders = [];
-                let Context = toGroupMessagesContexts(messages);
+                let context = toGroupMessagesContexts(messages);
                 let end = moment(messages[messages.length-1].data);
                 let beginning = moment(messages[0].data)
                 let duration =  moment.duration(end.diff(beginning));
@@ -892,27 +895,41 @@ module.exports = app => {
 
                    let DispersionInfoSenders = {
                        name : element.nome,
-                       dispersionVariables :[{variable: "Messages", 
-                                              mean: meanMessagesDay(messagesForSender,messagesOfDaysForSender.length),
-                                              variance: variance(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) ) ,
-                                              deviation: standardDeviation(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) ),
-                                              asymmetry: asymmetryCoefficient(meanMessagesDay(messagesForSender,messagesOfDaysForSender.length), median(messagesForDayToListValues(messagesOfDaysForSender)),standardDeviation(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) )) ,
-                                              forceAsymmetry: forceAsymmetry(asymmetryCoefficient(meanMessagesDay(messagesForSender,messagesOfDaysForSender.length), median(messagesForDayToListValues(messagesOfDaysForSender)),standardDeviation(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) )))},
+                //        dispersionVariables :[{variable: "Messages", 
+                //                               mean: meanMessagesDay(messagesForSender,messagesOfDaysForSender.length),
+                //                               variance: variance(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) ) ,
+                //                               deviation: standardDeviation(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) ),
+                //                               asymmetry: asymmetryCoefficient(meanMessagesDay(messagesForSender,messagesOfDaysForSender.length), median(messagesForDayToListValues(messagesOfDaysForSender)),standardDeviation(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) )) ,
+                //                               forceAsymmetry: forceAsymmetry(asymmetryCoefficient(meanMessagesDay(messagesForSender,messagesOfDaysForSender.length), median(messagesForDayToListValues(messagesOfDaysForSender)),standardDeviation(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) )))},
                                               
-                                              {variable: "Words", 
-                                              mean: meanWordsForMessage(messagesForSender, element.nome),
-                                              variance: variance(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome)) ,
-                                              deviation: standardDeviation(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome)),
-                                              asymmetry: asymmetryCoefficient(meanWordsForMessage(messagesForSender, element.nome), median(WordsForMessageToListValues(messagesForSender)), standardDeviation(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome))),
-                                              forceAsymmetry:forceAsymmetry(asymmetryCoefficient(meanWordsForMessage(messagesForSender, element.nome), median(WordsForMessageToListValues(messagesForSender)), standardDeviation(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome)))) },
+                //                               {variable: "Words", 
+                //                               mean: meanWordsForMessage(messagesForSender, element.nome),
+                //                               variance: variance(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome)) ,
+                //                               deviation: standardDeviation(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome)),
+                //                               asymmetry: asymmetryCoefficient(meanWordsForMessage(messagesForSender, element.nome), median(WordsForMessageToListValues(messagesForSender)), standardDeviation(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome))),
+                //                               forceAsymmetry:forceAsymmetry(asymmetryCoefficient(meanWordsForMessage(messagesForSender, element.nome), median(WordsForMessageToListValues(messagesForSender)), standardDeviation(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome)))) },
                                               
-                                              {variable: "Context", 
-                                              mean: mediaContext(context, element.nome),
-                                              variance: variance(contextToListValues(toGroupMessagesContexts(messagesForSender)), mediaContext(context, element.nome)),
-                                              deviation: standardDeviation(contextToListValues(filterNameGeneric(context,element.name)), mediaContext(context, element.nome) ),
-                                              asymmetry: asymmetryCoefficient(mediaContext(context, element.nome), median(contextToListValues(toGroupMessagesContexts(messagesForSender))),standardDeviation(contextToListValues(filterNameGeneric(context,element.name)), mediaContext(context, element.nome) ) ),
-                                              forceAsymmetry: forceAsymmetry(asymmetryCoefficient(mediaContext(context, element.nome), median(contextToListValues(toGroupMessagesContexts(messagesForSender))),standardDeviation(contextToListValues(filterNameGeneric(context,element.name)), mediaContext(context, element.nome) ) ))}]
-                   };
+                //                               {variable: "Context", 
+                //                               mean: mediaContext(context, element.nome),
+                //                               variance: variance(contextToListValues(toGroupMessagesContexts(messagesForSender)), mediaContext(context, element.nome)),
+                //                               deviation: standardDeviation(contextToListValues(filterNameGeneric(context,element.name)), mediaContext(context, element.nome) ),
+                //                               asymmetry: asymmetryCoefficient(mediaContext(context, element.nome), median(contextToListValues(toGroupMessagesContexts(messagesForSender))),standardDeviation(contextToListValues(filterNameGeneric(context,element.name)), mediaContext(context, element.nome) ) ),
+                //                               forceAsymmetry: forceAsymmetry(asymmetryCoefficient(mediaContext(context, element.nome), median(contextToListValues(toGroupMessagesContexts(messagesForSender))),standardDeviation(contextToListValues(filterNameGeneric(context,element.name)), mediaContext(context, element.nome) ) ))}]
+                //    };
+
+                dispersionVariables :[{variable: "Messages", 
+                mean: meanMessagesDay(messagesForSender,messagesOfDaysForSender.length),
+                variance: variance(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) ) },
+                
+                {variable: "Words", 
+                mean: meanWordsForMessage(messagesForSender, element.nome),
+                variance: variance(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome)) },
+                    
+                {variable: "Context", 
+                mean: meanContext(context, element.nome),
+                variance: variance(contextToListValues(toGroupMessagesContexts(messagesForSender)), meanContext(context, element.nome)),
+               }]
+};
             
                    FrequencyInfosMean.push(FrequencyInfoMeanSenders); 
                    DispersionSenders.push(DispersionInfoSenders)
