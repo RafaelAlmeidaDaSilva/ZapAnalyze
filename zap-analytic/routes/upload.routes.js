@@ -201,17 +201,17 @@ function identifySenders(messages){
 }
 
 function toGroupMessagesContexts(messages){
-    let antes = {};
-    let idContexto;
-    let contextos = [];
+    let before = {};
+    let idContext;
+    let contexts = [];
 
    
         for(let i=0; i< messages.length; i++)
         {
 
-            if(messages[i].nome !== antes.nome )
+            if(messages[i].nome !== before.nome )
             {
-                antes = {
+                before = {
                     nome: messages[i].nome,
                     id: i
                 }
@@ -223,16 +223,16 @@ function toGroupMessagesContexts(messages){
                     nome: messages[i].nome
                 }
                 
-                idContexto = contextos.push(contexto)-1;
+                idContext = contexts.push(contexto)-1;
         
             }
             else{
 
-                contextos[idContexto].msgs.push(messages[i]);
+                contexts[idContext].msgs.push(messages[i]);
             }
         }
 
-        return contextos;
+        return contexts;
       
 }
 
@@ -533,6 +533,26 @@ function countWordsForMessage (message)
     return splitString(message, ' ').length;
 }
 
+
+function countContextSender(messages, sender){
+    let listValues = [];
+    for (let index = 0; index < messages.length; index++) {
+        if(sender == messages[index].nome)
+            if(sender != messages[index-1].nome || index == 0){
+                for (let indexAfter = index; indexAfter <= messages.length; indexAfter++) {
+                    if(sender == messages[indexAfter].nome){     
+                        listValues[index]++;
+                        index = indexAfter;
+                    }    
+                    
+                }
+            }
+
+        
+    }
+
+    return listValues;
+}
 //---------------------------------[STATISTIC METHODS]-------------------------------------------
 
 function meanCount(distribuicao){
@@ -594,8 +614,13 @@ function frequencyDistribution (messagesOfSender){
 
 function contextToListValues (contexts)
 {   let listValues = [];
-    for (let index = 0; index < contexts.length; index++) 
-        listValues[index]= contexts[index].length;
+    for (let index = 0; index < contexts.length; index++)
+        listValues[index]= contexts[index].msgs.length;
+
+             //   console.log(toGroupMessagesContexts(context));
+                //   console.log(toGroupMessagesContexts(context)[0].msgs.length);
+                //   console.log(toGroupMessagesContexts(context)[0].nome);
+             
         
     return listValues;
 }
@@ -953,9 +978,22 @@ module.exports = app => {
                     
                 {variable: "Context", 
                 mean: meanContext(context, element.nome),
-                variance: variance(contextToListValues(toGroupMessagesContexts(messagesForSender)), meanContext(context, element.nome)),
+                variance: variance(contextToListValues(toGroupMessagesContexts(context)), meanContext(context, element.nome)),
                }]
-};
+                };
+
+
+                  console.log("toGroupMessagesContexts(messagesForSender)");
+               //   console.log(contextToListValues(toGroupMessagesContexts(messagesForSender)).toString());
+                  console.log(toGroupMessagesContexts(messagesForSender));
+                  console.log("toGroupMessagesContexts(context)");
+
+                //   console.log(toGroupMessagesContexts(context));
+                //   console.log(toGroupMessagesContexts(context)[6].msgs[0].length);
+                //   console.log(toGroupMessagesContexts(context)[6].nome);
+             
+
+                //   console.log(messagesForSender);
             
                    FrequencyInfosMean.push(FrequencyInfoMeanSenders); 
                    DispersionSenders.push(DispersionInfoSenders)
