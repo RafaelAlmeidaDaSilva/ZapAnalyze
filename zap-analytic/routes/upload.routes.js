@@ -130,6 +130,9 @@ function groupOrPrivate(senders){
         return false;
 }
 
+
+
+// ------------------------------------------------------------------------------
 let contarDC;
 function messagesForDaysTalked(durationDays, dateBeginning, messages){
     let  MensagensAgrupadasDias =[];
@@ -169,6 +172,10 @@ function messagesForDaysTalked(durationDays, dateBeginning, messages){
     contarDC = contDiasConversados;
     return MensagensAgrupadasDias;
 }
+// ------------------------------------------------------------------------------
+
+
+
 
 function identifySenders(messages){
     let remetentes = []
@@ -538,8 +545,19 @@ function countContextSender(messages, sender){
     let listValues = [];
     for (let index = 0; index < messages.length; index++) {
         if(sender == messages[index].nome)
-            if(sender != messages[index-1].nome || index == 0){
-                for (let indexAfter = index; indexAfter <= messages.length; indexAfter++) {
+            if(index != 0){
+                if(sender != messages[index-1].nome){
+                    for (let indexAfter = index; indexAfter < messages.length; indexAfter++) {
+                        if(sender == messages[indexAfter].nome){     
+                            listValues[index]++;
+                            index = indexAfter;
+                        }    
+                        
+                    }
+                }
+    
+            }else{
+                for (let indexAfter = index; indexAfter < messages.length; indexAfter++) {
                     if(sender == messages[indexAfter].nome){     
                         listValues[index]++;
                         index = indexAfter;
@@ -547,7 +565,7 @@ function countContextSender(messages, sender){
                     
                 }
             }
-
+            
         
     }
 
@@ -919,10 +937,12 @@ module.exports = app => {
                 let beginning = moment(messages[0].data)
                 let duration =  moment.duration(end.diff(beginning));
                 messagesOfDays = messagesForDaysTalked(duration.asDays(), beginning.toDate(), messages);
+
+                //------------------------------------------------------------------------------------------------------------------------
                 let days = Math.trunc(duration.asDays());
                 let hours = Math.trunc(((duration.asDays() - Math.trunc(duration.asDays()))*24));
                 let minutes = Math.trunc((((duration.asDays() - Math.trunc(duration.asDays()))*24) - Math.trunc((duration.asDays() - Math.trunc(duration.asDays()))*24)) * 60);
-
+                //---------------------------------------------------------------------------------------------------------------------------------------------
             
 
                 identifySenders(messages).forEach(element => {
@@ -931,12 +951,13 @@ module.exports = app => {
 
                     let FrequencyInfoMeanSenders={
                        nome: element.nome,
-                       qtdContexto: context.length,
+                       //--------------------------------------------------------------------------------------------------------------
+                       qtdContexto: countContextSender(messages, element.nome).length,
                        mediaMsgContexto: meanContext(context, element.nome),
                        mediaPalavras: meanWordsForMessage(messages, element.nome),        
                        mediaPalavrasContexto: meanWordsContext(context, element.nome),
                        msgsContexto: toGroupMessagesContexts(messagesForSender),  
-        
+                       //-----------------------------------------------------------------------------------------------------------       
                        mgsrt: filterNameGeneric(messages,element.nome),
                        
                    };
@@ -983,10 +1004,18 @@ module.exports = app => {
                 };
 
 
-                  console.log("toGroupMessagesContexts(messagesForSender)");
+                //   console.log("toGroupMessagesContexts(messagesForSender)");
                //   console.log(contextToListValues(toGroupMessagesContexts(messagesForSender)).toString());
-                  console.log(toGroupMessagesContexts(messagesForSender));
-                  console.log("toGroupMessagesContexts(context)");
+                //   console.log(toGroupMessagesContexts(messagesForSender));
+                  console.log("messages.name");
+                  console.log(messages[0].nome);
+                  console.log(messages[0]);
+                  console.log(messages[1].nome);
+                  console.log(messages[1]);
+                  console.log(messages[2].nome);
+                  console.log(messages[2].nome);
+                  console.log(messages[3].nome);
+
 
                 //   console.log(toGroupMessagesContexts(context));
                 //   console.log(toGroupMessagesContexts(context)[6].msgs[0].length);
