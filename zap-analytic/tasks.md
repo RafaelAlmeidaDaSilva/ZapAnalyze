@@ -15,3 +15,6 @@ funções de fabrica
 funções de validação
 funções de estrategia
 funções analise
+
+
+

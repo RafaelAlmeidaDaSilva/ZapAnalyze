@@ -24,7 +24,7 @@ const upload = require('../libs/config-upload');
 const readline = require('readline');
 const fs = require('fs');
 const moment = require('moment');
-const { Console } = require('console');
+const { Console, count } = require('console');
 
 
 
@@ -132,8 +132,6 @@ function groupOrPrivate(senders){
 
 
 
-// ------------------------------------------------------------------------------
-let contarDC;
 function messagesForDaysTalked(durationDays, dateBeginning, messages){
     let  MensagensAgrupadasDias =[];
     let  contDiasConversados = 0;
@@ -167,13 +165,42 @@ function messagesForDaysTalked(durationDays, dateBeginning, messages){
         objetosFiltrados=null;
 
     }
-
-    // console.log("Dias conversados: ", contDiasConversados);
-    contarDC = contDiasConversados;
     return MensagensAgrupadasDias;
 }
-// ------------------------------------------------------------------------------
 
+
+function countDaysTalked(messages){
+    let countDays = 0; //contador de dias conversados
+    let dates = []; // datas associadas a contagem. variável de (MANUTENÇÃO)
+    let messagesNow = []; //array de mensagens do mesmmo dia
+
+    for (let index = 0; index < messages.length;) {
+        const dateMessage = moment(messages[index].data);
+
+        messagesNow = messages.filter(element => {
+            return moment(element.data).date() === dateMessage.date();
+        });
+
+
+
+        if(messagesNow.length !== 0)
+        {
+            index = index + messagesNow.length;
+            dates.push(dateMessage); 
+            countDays++;
+            continue;
+            
+        }else{
+            index++;
+            countDays++;
+            continue;
+        }
+        
+    }
+
+    return countDays;
+    // retorna a quantidade de dias que há alguma mensagem.
+}
 
 
 
@@ -290,10 +317,10 @@ function meanWordsContext(contexts, name){
     return arithmeticMean(accumulatorWords,N);
 }
 
-function meanWordsForMessage(messages, name){
+function meanWordsForMessage(messages, sender){
     let accumulatorWords=0, N=0;
-    let mensagens = filterNameGeneric(messages, name);
-    for(let i = 0; i< mensagens.length-1 ; i++)
+    let mensagens = filterNameGeneric(messages, sender);
+    for(let i = 0; i< mensagens.length ; i++)
     {
         accumulatorWords += splitString(mensagens[i].texto, ' ').length;
         N++;
@@ -543,33 +570,37 @@ function countWordsForMessage (message)
 
 function countContextSender(messages, sender){
     let listValues = [];
-    for (let index = 0; index < messages.length; index++) {
+    let count = 0;
+    for (let index = 0; index < messages.length; index++) 
+    {
         if(sender == messages[index].nome)
-            if(index != 0){
-                if(sender != messages[index-1].nome){
-                    for (let indexAfter = index; indexAfter < messages.length; indexAfter++) {
-                        if(sender == messages[indexAfter].nome){     
-                            listValues[index]++;
-                            index = indexAfter;
-                        }    
+        {
+                for (let After = index+1; After < messages.length; After++) 
+                {
+                    if(sender != messages[After].nome && messages[After-1].nome == sender)
+                    {
+        
+                        count++;
+
+                        index = After;
+                        break;
+
+                    }else
+                    {
+                        if(messages.length == After+1 && sender == messages[index].nome)
+                        {  
+                            count++;
+                            index = After;
+                            break;
                         
+                        }
                     }
-                }
-    
-            }else{
-                for (let indexAfter = index; indexAfter < messages.length; indexAfter++) {
-                    if(sender == messages[indexAfter].nome){     
-                        listValues[index]++;
-                        index = indexAfter;
-                    }    
                     
                 }
-            }
-            
-        
+        }
     }
 
-    return listValues;
+    return count;
 }
 //---------------------------------[STATISTIC METHODS]-------------------------------------------
 
@@ -938,21 +969,21 @@ module.exports = app => {
                 let duration =  moment.duration(end.diff(beginning));
                 messagesOfDays = messagesForDaysTalked(duration.asDays(), beginning.toDate(), messages);
 
-                //------------------------------------------------------------------------------------------------------------------------
+               
                 let days = Math.trunc(duration.asDays());
                 let hours = Math.trunc(((duration.asDays() - Math.trunc(duration.asDays()))*24));
                 let minutes = Math.trunc((((duration.asDays() - Math.trunc(duration.asDays()))*24) - Math.trunc((duration.asDays() - Math.trunc(duration.asDays()))*24)) * 60);
-                //---------------------------------------------------------------------------------------------------------------------------------------------
-            
+               
+               
 
                 identifySenders(messages).forEach(element => {
                     messagesForSender = filterNameGeneric(messages,element.nome);
                     messagesOfDaysForSender = messagesForDaysTalked(duration.asDays(), beginning.toDate(), messagesForSender); 
-
+                
                     let FrequencyInfoMeanSenders={
                        nome: element.nome,
                        //--------------------------------------------------------------------------------------------------------------
-                       qtdContexto: countContextSender(messages, element.nome).length,
+                       qtdContexto: countContextSender(messages, element.nome),
                        mediaMsgContexto: meanContext(context, element.nome),
                        mediaPalavras: meanWordsForMessage(messages, element.nome),        
                        mediaPalavrasContexto: meanWordsContext(context, element.nome),
@@ -965,65 +996,31 @@ module.exports = app => {
                      
                 
 
-                   let DispersionInfoSenders = {
+                   let DispersionInfoSenders = 
+                   {
                        name : element.nome,
-                //        dispersionVariables :[{variable: "Messages", 
-                //                               mean: meanMessagesDay(messagesForSender,messagesOfDaysForSender.length),
-                //                               variance: variance(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) ) ,
-                //                               deviation: standardDeviation(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) ),
-                //                               asymmetry: asymmetryCoefficient(meanMessagesDay(messagesForSender,messagesOfDaysForSender.length), median(messagesForDayToListValues(messagesOfDaysForSender)),standardDeviation(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) )) ,
-                //                               forceAsymmetry: forceAsymmetry(asymmetryCoefficient(meanMessagesDay(messagesForSender,messagesOfDaysForSender.length), median(messagesForDayToListValues(messagesOfDaysForSender)),standardDeviation(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) )))},
-                                              
-                //                               {variable: "Words", 
-                //                               mean: meanWordsForMessage(messagesForSender, element.nome),
-                //                               variance: variance(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome)) ,
-                //                               deviation: standardDeviation(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome)),
-                //                               asymmetry: asymmetryCoefficient(meanWordsForMessage(messagesForSender, element.nome), median(WordsForMessageToListValues(messagesForSender)), standardDeviation(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome))),
-                //                               forceAsymmetry:forceAsymmetry(asymmetryCoefficient(meanWordsForMessage(messagesForSender, element.nome), median(WordsForMessageToListValues(messagesForSender)), standardDeviation(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome)))) },
-                                              
-                //                               {variable: "Context", 
-                //                               mean: mediaContext(context, element.nome),
-                //                               variance: variance(contextToListValues(toGroupMessagesContexts(messagesForSender)), mediaContext(context, element.nome)),
-                //                               deviation: standardDeviation(contextToListValues(filterNameGeneric(context,element.name)), mediaContext(context, element.nome) ),
-                //                               asymmetry: asymmetryCoefficient(mediaContext(context, element.nome), median(contextToListValues(toGroupMessagesContexts(messagesForSender))),standardDeviation(contextToListValues(filterNameGeneric(context,element.name)), mediaContext(context, element.nome) ) ),
-                //                               forceAsymmetry: forceAsymmetry(asymmetryCoefficient(mediaContext(context, element.nome), median(contextToListValues(toGroupMessagesContexts(messagesForSender))),standardDeviation(contextToListValues(filterNameGeneric(context,element.name)), mediaContext(context, element.nome) ) ))}]
-                //    };
+                       dispersionVariables :
+                                                [
+                                                            
+                                                        {
+                                                            variable: "Messages", 
+                                                            mean: meanMessagesDay(messagesForSender,messagesOfDaysForSender.length),
+                                                            variance: variance(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) ) 
+                                                        },
+                                                        {
+                                                            variable: "Words", 
+                                                            mean: meanWordsForMessage(messagesForSender, element.nome),
+                                                            variance: variance(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome)) 
+                                                        },
+                                                        {
+                                                            variable: "Context", 
+                                                            mean: meanContext(context, element.nome),
+                                                            variance: variance(contextToListValues(toGroupMessagesContexts(context)), meanContext(context, element.nome)),
+                                                        }
+                                                ]
+                    };
 
-                dispersionVariables :[{variable: "Messages", 
-                mean: meanMessagesDay(messagesForSender,messagesOfDaysForSender.length),
-                variance: variance(messagesForDayToListValues(messagesOfDaysForSender), meanMessagesDay(messagesForSender,messagesOfDaysForSender.length) ) },
-                
-                {variable: "Words", 
-                mean: meanWordsForMessage(messagesForSender, element.nome),
-                variance: variance(WordsForMessageToListValues(messagesForSender), meanWordsForMessage(messagesForSender, element.nome)) },
-                    
-                {variable: "Context", 
-                mean: meanContext(context, element.nome),
-                variance: variance(contextToListValues(toGroupMessagesContexts(context)), meanContext(context, element.nome)),
-               }]
-                };
-
-
-                //   console.log("toGroupMessagesContexts(messagesForSender)");
-               //   console.log(contextToListValues(toGroupMessagesContexts(messagesForSender)).toString());
-                //   console.log(toGroupMessagesContexts(messagesForSender));
-                  console.log("messages.name");
-                  console.log(messages[0].nome);
-                  console.log(messages[0]);
-                  console.log(messages[1].nome);
-                  console.log(messages[1]);
-                  console.log(messages[2].nome);
-                  console.log(messages[2].nome);
-                  console.log(messages[3].nome);
-
-
-                //   console.log(toGroupMessagesContexts(context));
-                //   console.log(toGroupMessagesContexts(context)[6].msgs[0].length);
-                //   console.log(toGroupMessagesContexts(context)[6].nome);
-             
-
-                //   console.log(messagesForSender);
-            
+       
                    FrequencyInfosMean.push(FrequencyInfoMeanSenders); 
                    DispersionSenders.push(DispersionInfoSenders)
                    
@@ -1032,14 +1029,16 @@ module.exports = app => {
 
 
            
-                res.render('home', {totalmsg:messages.length, 
+                res.render('home', {
+                                    
+                                    totalmsg:messages.length, 
                                     dtinicio: messages[0].data.toLocaleDateString( 'pt-br', options),
                                     dtfim: messages[messages.length-1].data.toLocaleDateString( 'pt-br', options),
                                     msgsRemetentes: FrequencyInfosMean,
                                     dias: days,
                                     horasDias: hours,
                                     minutosHoras: minutes,
-                                    convDias: contarDC,
+                                    convDias: countDaysTalked(messages),
                                     week: weekCont(messages),
                                     periodos: periodCont(messages),
                                     distribFrequence: frequencyDistribution(FrequencyInfosMean),
