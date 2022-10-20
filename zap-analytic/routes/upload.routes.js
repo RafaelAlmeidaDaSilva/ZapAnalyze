@@ -56,7 +56,7 @@ function filterNameGeneric (array, name ){
 
 let options = {     
     dateStyle: ('full' || 'long' || 'medium' || 'short' ), 
-    timeStyle: ('full' || 'long' || 'medium' || 'short' ), 
+    // timeStyle: ('full' || 'long' || 'medium' || 'short' ), 
 }
 
 function assignLine(line){
@@ -168,7 +168,6 @@ function messagesForDaysTalked(durationDays, dateBeginning, messages){
     return MensagensAgrupadasDias;
 }
 
-
 function countDaysTalked(messages){
     let countDays = 0; //contador de dias conversados
     let dates = []; // datas associadas a contagem. variável de (MANUTENÇÃO)
@@ -201,8 +200,6 @@ function countDaysTalked(messages){
     return countDays;
     // retorna a quantidade de dias que há alguma mensagem.
 }
-
-
 
 function identifySenders(messages){
     let remetentes = []
@@ -315,6 +312,9 @@ function meanWordsContext(contexts, name){
     }
 
     return arithmeticMean(accumulatorWords,N);
+
+
+
 }
 
 function meanWordsForMessage(messages, sender){
@@ -602,6 +602,35 @@ function countContextSender(messages, sender){
 
     return count;
 }
+
+
+function statusMean(qtdPalavras, qc, mp, mm)
+{
+    return (mp/mm)/(qtdPalvras/qc)
+
+}
+
+
+function qtdPalavrasContexto(contexts, name)
+{
+    let messagesContextsSender = filterNameGeneric(contexts, name);
+    let N = 0;
+    for(let i = 0; i<= messagesContextsSender.length-1; i++)
+    {
+        accumulatorWords=0;
+        N=0;
+    
+        for(let j = 0; j<= contexts[i].msgs.length-1; j++)
+        {
+            accumulatorWords += contexts[i].msgs[j].texto.split(' ').length;
+            N++;
+        }
+        
+    }  
+
+    return N;
+    
+}
 //---------------------------------[STATISTIC METHODS]-------------------------------------------
 
 function meanCount(distribuicao){
@@ -639,7 +668,7 @@ function messageCounterBySender(messagesOfSender){
 
 function relativeFrequency(total, frequencia){
     return (frequencia / total)*100; 
- }
+}
 
 function frequencyDistribution (messagesOfSender){
     let totalRemetentes = 0; 
@@ -659,7 +688,7 @@ function frequencyDistribution (messagesOfSender){
     });
     
     return msgs;
- }
+}
 
 function contextToListValues (contexts)
 {   let listValues = [];
@@ -694,7 +723,6 @@ function WordsForMessageToListValues(messages){
     
     return listValues;
 }
-
 
 function median (listValues)
 {  let elementList

@@ -39,4 +39,6 @@ module.exports = app => {
     app.set('view engine','hbs')
     // app.engine('hbs', exphbs({defaultLayout: 'main', extname: '.hbs'}));
     // app.set('view engine', 'hbs');
+    // Handlebars.registerPartial('','{{prefix}}')
+    // {}
 }
