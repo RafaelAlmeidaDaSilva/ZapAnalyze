@@ -130,8 +130,6 @@ function groupOrPrivate(senders){
         return false;
 }
 
-
-
 function messagesForDaysTalked(durationDays, dateBeginning, messages){
     let  MensagensAgrupadasDias =[];
     let  contDiasConversados = 0;
@@ -285,7 +283,8 @@ function meanWordsContext(contexts, name){
     let accumulatorWords=0, N=0;
     let frequencyMessages = [];
     let messagesContextsSender = filterNameGeneric(contexts, name);
-
+        console.log(name)
+        console.log(messagesContextsSender)
     for(let i = 0; i<= messagesContextsSender.length-1; i++)
     {
         accumulatorWords=0;
@@ -567,7 +566,6 @@ function countWordsForMessage (message)
     return splitString(message, ' ').length;
 }
 
-
 function countContextSender(messages, sender){
     let listValues = [];
     let count = 0;
@@ -603,14 +601,6 @@ function countContextSender(messages, sender){
     return count;
 }
 
-
-function statusMean(qtdPalavras, qc, mp, mm)
-{
-    return (mp/mm)/(qtdPalvras/qc)
-
-}
-
-
 function qtdPalavrasContexto(contexts, name)
 {
     let messagesContextsSender = filterNameGeneric(contexts, name);
@@ -631,6 +621,8 @@ function qtdPalavrasContexto(contexts, name)
     return N;
     
 }
+
+
 //---------------------------------[STATISTIC METHODS]-------------------------------------------
 
 function meanCount(distribuicao){
@@ -722,6 +714,15 @@ function WordsForMessageToListValues(messages){
         listValues.push(countWordsForMessage(messages[index]));
     
     return listValues;
+}
+
+function acumulatorUniWords(array){
+
+        
+
+    return array.forEach(() => {
+         this
+    })
 }
 
 function median (listValues)
@@ -915,6 +916,16 @@ function forceAsymmetry(coefficient)
         return "Forte";
 }
 
+// function statusMean(qtdPalavras, qc, mp, mm)
+// {
+
+// }
+
+function status(qtdPalavras, qc, mp, mm){
+    return (mp/mm)/(qtdPalavras/qc)
+}
+
+
 
 //-------------------------------------[BUSINESS RULES METHODS]-------------------------------
 
@@ -1016,6 +1027,7 @@ module.exports = app => {
                        mediaPalavras: meanWordsForMessage(messages, element.nome),        
                        mediaPalavrasContexto: meanWordsContext(context, element.nome),
                        msgsContexto: toGroupMessagesContexts(messagesForSender),  
+                       status: status(meanWordsForMessage(messages, element.nome),meanContext(context, element.nome),countContextSender(messages, element.nome), meanWordsContext(context, element.nome)),
                        //-----------------------------------------------------------------------------------------------------------       
                        mgsrt: filterNameGeneric(messages,element.nome),
                        
@@ -1054,7 +1066,7 @@ module.exports = app => {
                    
                 });
 
-
+                console.log(FrequencyInfosMean.length)
 
            
                 res.render('home', {
